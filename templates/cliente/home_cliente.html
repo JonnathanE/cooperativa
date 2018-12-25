@@ -1,0 +1,57 @@
+{% extends "master.html" %}
+{% block contenido %}
+{% include "header.html" %}
+<div class="nav-wrapper container">
+    <form method="get" action="buscarCliente">
+        <div class="input-field">
+          <input id="search" type="search" required>
+          <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+          <i class="material-icons">close</i>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <div class="col s12">
+        <div class="card z-depth-3">
+            <div class="card-content">
+                <span class="card-title">{{mensaje}}</span>
+                <table class="responsive-table highlight centered">
+                    <thead>
+                        <tr>
+                            <th>Cédula</th>
+                            <th>Apellidos</th>
+                            <th>Nombres</th>
+                            <th>Genero</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in clientes %}
+                        <tr>
+                            
+                            <td>{{item.cedula}}</td>
+                            <td>{{item.apellidos}}</td>
+                            <td>{{item.nombres}}</td>
+                            {% if item.genero == 'm' %}
+                            <td>Masculino</td>
+                            {% else %}
+                            <td>Femenino</td>
+                            {% endif %}
+                            <td>
+                                <a href="editar?cedula={{item.cedula}}"><i class="material-icons left">edit</i></a>
+                                <a href="eliminar?cedula={{item.cedula}}"><i class="material-icons left">delete_sweep</i></a>
+                                <a href="listarCuenta?cedula={{item.cedula}}"><i class="material-icons left">ballot</i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-action">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

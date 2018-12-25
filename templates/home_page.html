@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<!--
+        Intensify by TEMPLATED
+        templated.co @templatedco
+        Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+    <head>
+        {% load staticfiles %}
+        <title>Cooperativa</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'stylesheets/mainIndex.css' %}" />
+    </head>
+    <body>
+
+        <!-- Header -->
+        <header id="header">
+            <nav class="left">
+                <a href="#menu"><span>Menú</span></a>
+            </nav>
+            <a href="" class="logo">Cooperativa Jonnathan</a>
+            <nav class="right">
+                <a href="/login/" class="button alt">Login</a>
+            </nav>
+        </header>
+
+        <!-- Menu -->
+        <nav id="menu">
+            <ul class="links">
+                <li><a href="/home" id="home">Home</a></li>
+                <li><a href="#one">Beneficios</a></li>
+                <li><a href="#three">Elementos</a></li>
+            </ul>
+            <ul class="actions vertical">
+                <li><a href="/login" class="button fit">Login</a></li>
+            </ul>
+        </nav>
+
+        <!-- Banner -->
+        <section id="banner">
+            <div class="content">
+                <h1>Servicio de Facturación Electrónica</h1>
+                <p>Simple de Integrar, fácil de Utilizar y con Estupenda Atención al Cliente.</p>
+                <ul class="actions">
+                    <li><a href="/login" class="button scrolly">Registrarse</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- One -->
+        <section id="one" class="wrapper">
+            <div class="inner flex flex-3">
+                <div class="flex-item left">
+                    <div>
+                        <h3>Movilidad ilimata</h3>
+                        <p>Factura electrónicamente y Administra tu negocio desde donde estés y con cualquier Dispositivo.</p>
+                    </div>
+                    <div>
+                        <h3>Seguridad</h3>
+                        <p>Custodia tus facturas Electrónicas que recibes sin temor a que se te confundan o pierdan.</p>
+                    </div>
+                </div>
+                <div class="flex-item image fit round">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdmuI_u7M37Dzfiza8C3orBxc_ZJMrHxBjlwVl7VRirVu2-WjG" alt="" />
+                </div>
+                <div class="flex-item right">
+                    <div>
+                        <h3>Administración</h3>
+                        <p>Configura facturas electrónicas, controla inventarios y mantén un registro de los clientes de tu negocio.</p>
+                    </div>
+                    <div>
+                        <h3>Control y Actualización</h3>
+                        <p>Controla y Actualiza los productos existentes y Clientes activos de tu Negocio.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Two -->
+        <section id="two" class="wrapper style1 special">
+            <div class="inner">
+                <h2>¿Qué es y Para qué Sirve?</h2>
+                <figure>
+                    <blockquote>
+                        Una factura electrónica, es un documento que sirve para describir el costo de los productos y desglosar los impuestos correspondientes a pagar. Sustituye, según las disposiciones legales correspondientes, a las facturas tradicionales en papel y garantiza, entre otras cosas, la autenticidad de su origen y la integridad de su contenido.
+                    </blockquote>
+                    <!--
+                    <footer>
+                        <cite class="author">Jane Anderson</cite>
+                        <cite class="company">CEO, Untitled</cite>
+                    </footer>
+                    -->
+                </figure>
+            </div>
+        </section>
+
+        <!-- Three -->
+        <section id="three" class="wrapper">
+            <div class="inner flex flex-3">
+                <div class="flex-item box">
+                    <div class="image fit">
+                        <img src="images/producto.png" alt="" />
+                        <br>
+                        <center><p>Ingresa Productos</p></center>
+                    </div>
+                    <div class="content">
+                        <center><h3>Productos</h3></center>
+                        <p></p>
+                    </div>
+                </div>
+                <div class="flex-item box">
+                    <div class="image fit">
+                        <img src="images/factura.png" alt="" style="height: 200px"/>
+                        <br>
+                        <center><p>Genera Factura</p></center>
+                    </div>
+                    <div class="content">
+                        <center><h3>Factura</h3></center>
+                        <p></p>
+                    </div>
+                </div> 
+                <div class="flex-item box">
+                    <div class="image fit">
+                        <img src="images/cliente.png" alt="" />
+                        <br>
+                        <center><p>Administra Clientes</p></center>
+                    </div>
+                    <div class="content">
+                        <center><h3>Clientes</h3></center>
+                        <p></p>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer id="footer">
+            <div class="inner">
+                <h2>Contacto</h2>
+                <ul class="actions">
+                    <li><span class="icon fa-phone"></span> <a href="#">(593) 969-404-785</a></li>
+                    <li><span class="icon fa-envelope"></span> <a href="#">facturacion-yjj@gmail.com</a></li>
+                    <li><span class="icon fa-map-marker"></span>Unl</li>
+                </ul>
+            </div>
+            <div class="copyright">
+                &copy; Untitled. Design <a href="https://templated.co">TEMPLATED</a>. Images <a href="https://unsplash.com">Unsplash</a> y <a href="https://foter.com/">Foter</a>.
+            </div>
+        </footer>
+
+        <!-- Scripts -->
+        <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/jquery.scrolly.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/skel.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/util.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+
+    </body>
+</html>

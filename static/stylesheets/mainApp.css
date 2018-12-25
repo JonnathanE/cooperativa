@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+nav div label {
+    display: none;
+    cursor: pointer;
+    margin-left: 15px;
+}
+
+#imagen-user {
+    height: 40px;
+    width: 40px;
+    margin-top: 10px;
+    padding: 0;
+}
+
+.menu {
+    display: none;
+    width: 140px;
+    float: left;
+    background: #78909c;
+    height: auto;
+    margin-top: 20px;
+   /* min-height: 100%; 
+    margin-bottom: -5000px; /* any large number will do */
+   /* padding-bottom: 5000px; */
+}
+
+.menu ul {
+    list-style-type: none;
+    margin-left: 0px;
+    padding-left: 10px;
+}
+
+.menu ul li a {
+    font-size: 12px;
+    font-weight: 800;
+    display: inline-block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+    margin-left: -5px;
+    padding-left: 10px;
+}
+.menu ul li a:hover {
+    background: #262646;
+    border-left: solid 5px #6a75eb;
+    margin-left: -10px;
+    width: 100%;
+    cursor: pointer;
+}
+
+#hover-submenu:hover {
+    background: #262646;
+    border-left: solid 5px #6a75eb;
+    margin-left: -10px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.menu ul li ul {
+    padding-left:0px;
+    display: none; 
+}
+
+.menu ul li ul li {
+    float: left;
+}
+
+#show-submenu:checked ~#submenu {
+    display: block;
+}
+
+.seccion {
+    height: 100%;
+}
+
+
+/*
+    nav ul:hover {
+        background: rgba(255, 255, 255, 0.349);
+    }
+*/
+
+@media (min-width: 1024px){
+    nav div label {
+        display: block;
+    }
+
+    .menu {
+        display: block;
+    }
+
+}
+
+@media (min-width: 768px) {
+    nav div label {
+        display: block;
+    }
+
+    .menu {
+        display: block;
+    }
+}
