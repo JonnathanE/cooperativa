@@ -25,6 +25,7 @@
                             <th>Saldo</th>
                             <th>Tipo Cuenta</th>
                             <th>Cliente</th>
+                            <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,6 +37,10 @@
                             <td>{{item.saldo}}</td>
                             <td>{{item.tipoCuenta}}</td>
                             <td>{{item.cliente}}</td>
+                            <td>
+                                <a href="eliminar?cedula={{item.numero}}">[Cambiar EStado]</a>
+                                <a href="listarCuenta?cedula={{item.numero}}">[Transaccion]</a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

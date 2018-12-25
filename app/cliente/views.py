@@ -126,6 +126,7 @@ def buscarCliente(request):
     else:
         return render(request, 'login/acceso_prohibido.html')
 
+#METODOS DE LA CUENTA
 @login_required
 def crearCuenta (request):
     usuario = request.user
@@ -154,6 +155,7 @@ def crearCuenta (request):
     else:
         return render(request, 'login/acceso_prohibido.html')
 
+@login_required
 def listarCuenta (request):
     usuario = request.user
     if usuario.has_perm('modelo.view_cuenta'):
@@ -162,7 +164,21 @@ def listarCuenta (request):
         listaCuenta = Cuenta.objects.all().filter(cliente = client).order_by('numero')
         context = {
             'cuentas':listaCuenta,
-            'mensaje':"Modulo Cuenta"
+            'mensaje':"Cuenta de "+client.nombres,
+        }
+        return render(request, 'cuenta/home_cuenta.html', context)
+    else:
+        return render(request, 'login/acceso_prohibido.html')
+
+@login_required
+def principalCuenta(request):
+    usuario = request.user
+    if usuario.has_perm('modelo.view_cuenta'):
+        listaCuenta = Cuenta.objects.all().order_by('numero')
+        context = {
+            'cuentas': listaCuenta,
+            'title': "Clientes",
+            'mensaje': "Modulo Cuentas"
         }
         return render(request, 'cuenta/home_cuenta.html', context)
     else:

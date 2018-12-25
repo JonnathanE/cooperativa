@@ -90,10 +90,11 @@
         {{msg.message}}
     </div>
 {% endfor %}
-
+-->
 {% if user.is_authenticated %}
-    <p>Binevenido, <b>{{user.username}}</b> | <a href= "{% url 'logout'%}">Cerrar Sesion</a></p>
+    <p><a href= "{% url 'cliente'%}">Listar Todos los Clientes</a> | <a href= "{% url 'listAllCuenta'%}">Listar Todas las Cuentas</a></p>
 {% endif %}
+<!--
 {% if user.groups%}
     <p>si se cumplio {{user.groups}}</p>
 {% endif %}

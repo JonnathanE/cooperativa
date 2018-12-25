@@ -11,4 +11,5 @@ urlpatterns = [
     path('buscarCliente', views.buscarCliente),
     path('crearCuenta', views.crearCuenta),
     path('listarCuenta', views.listarCuenta),
+    path('listarAllCuentas', views.principalCuenta, name='listAllCuenta'),
 ]
