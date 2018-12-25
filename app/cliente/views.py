@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
-from .forms import FormularioCliente, FormularioCuenta
-from app.modelo.models import Cliente, Cuenta
+from .forms import FormularioCliente, FormularioCuenta, FormularioTransaccion
+from app.modelo.models import Cliente, Cuenta, Transaccion, Caja
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -196,5 +196,40 @@ def activarEstadoCuenta(request):
             return redirect(principal)
         else:
             return render(request, 'cuenta/activar_cuenta.html')
+    else:
+        return render(request, 'login/acceso_prohibido.html')
+
+
+
+# METODOS DE TRANSACCION
+@login_required
+def crearTransaccion (request):
+    usuario = request.user
+    if usuario.has_perm('modelo.add_transaccion'):
+        formulario = FormularioTransaccion(request.POST)
+        if request.method == 'POST':
+            if formulario.is_valid():
+                datos = formulario.cleaned_data
+                #dni = request.GET['cedula']
+                #cliente = Cliente.objects.get(cedula = dni)
+                transaccion = Transaccion()
+                transaccion.tipo = datos.get('tipo')
+                transaccion.valor = datos.get('valor')
+                transaccion.descripcion = datos.get('descripcion')
+                transaccion.cuenta = datos.get('cuenta')
+                #cuenta.cliente = cliente
+                transaccion.save()
+                caja = Caja()
+                caja.nombres = usuario.first_name
+                caja.apellidos = usuario.last_name
+                caja.transaccion = transaccion
+                caja.save()
+                return redirect(principal)
+        context = {
+            'f': formulario,
+            'title': "Ingresar Cuenta",
+            'mensaje': "Ingresar nueva Cuenta"
+        }
+        return render(request, 'transaccion/crear_transaccion.html', context)
     else:
         return render(request, 'login/acceso_prohibido.html')
