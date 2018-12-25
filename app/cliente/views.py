@@ -183,3 +183,18 @@ def principalCuenta(request):
         return render(request, 'cuenta/home_cuenta.html', context)
     else:
         return render(request, 'login/acceso_prohibido.html')
+
+@login_required
+def activarEstadoCuenta(request):
+    usuario = request.user
+    if usuario.has_perm('modelo.change_cuenta'):
+        num = request.GET['numero']
+        if request.method == 'POST':
+            cuenta = Cuenta.objects.get(numero = num)
+            cuenta.estado = True
+            cuenta.save()
+            return redirect(principal)
+        else:
+            return render(request, 'cuenta/activar_cuenta.html')
+    else:
+        return render(request, 'login/acceso_prohibido.html')

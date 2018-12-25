@@ -1,0 +1,10 @@
+{% extends 'master.html' %}
+{% block contenido %}
+<form method="POST" class="mt-4 mb-4">
+    <div class="container">
+        {% csrf_token %}
+        <input type="submit" value="Activar" class="btn waves-effect waves-light">
+        <a href="{% url 'cliente' %}" class="btn waves-effect waves-light">Cancelar</a>
+    </div>
+</form>
+{% endblock contenido %}

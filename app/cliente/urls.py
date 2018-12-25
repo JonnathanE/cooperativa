@@ -12,4 +12,5 @@ urlpatterns = [
     path('crearCuenta', views.crearCuenta),
     path('listarCuenta', views.listarCuenta),
     path('listarAllCuentas', views.principalCuenta, name='listAllCuenta'),
+    path('activarCuenta', views.activarEstadoCuenta),
 ]

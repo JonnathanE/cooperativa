@@ -1,16 +1,6 @@
 {% extends "master.html" %}
 {% block contenido %}
 {% include "header.html" %}
-<!--
-<nav>
-    <div class="nav-wrapper z-depth-2 purple lighten-2">
-        <a href="#!" class="brand-logo">Clientes</a>
-        <ul class="right hide-on-med-and-down">
-            <li><a href="nuevo"><i class="material-icons left">playlist_add</i>Nuevo</a></li>
-        </ul>
-    </div>
-</nav>
--->
 <div class="row">
     <div class="col s12">
         <div class="card z-depth-3">
@@ -38,7 +28,7 @@
                             <td>{{item.tipoCuenta}}</td>
                             <td>{{item.cliente}}</td>
                             <td>
-                                <a href="eliminar?cedula={{item.numero}}">[Cambiar EStado]</a>
+                                <a href="activarCuenta?numero={{item.numero}}">[Activar Cuenta]</a>
                                 <a href="listarCuenta?cedula={{item.numero}}">[Transaccion]</a>
                             </td>
                         </tr>
