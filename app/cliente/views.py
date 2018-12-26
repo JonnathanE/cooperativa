@@ -212,19 +212,26 @@ def crearTransaccion (request):
                 datos = formulario.cleaned_data
                 #dni = request.GET['cedula']
                 #cliente = Cliente.objects.get(cedula = dni)
-                transaccion = Transaccion()
-                transaccion.tipo = datos.get('tipo')
-                transaccion.valor = datos.get('valor')
-                transaccion.descripcion = datos.get('descripcion')
-                transaccion.cuenta = datos.get('cuenta')
-                #cuenta.cliente = cliente
-                transaccion.save()
-                caja = Caja()
-                caja.nombres = usuario.first_name
-                caja.apellidos = usuario.last_name
-                caja.transaccion = transaccion
-                caja.save()
-                return redirect(principal)
+                cuenta = datos.get('cuenta')
+                if datos.get('tipo') == "retiro":
+                    if saldo(cuenta.saldo,datos.get('valor')):
+                        transaccion = Transaccion()
+                        guardar_transaccion(transaccion, datos)
+                        caja = Caja()
+                        guardar_caja(caja, transaccion, usuario)
+                        cuenta.saldo = cuenta.saldo-transaccion.valor
+                        cuenta.save()
+                        return redirect(principal)
+                    else:
+                        return HttpResponse('No se puede realizar el retiro')
+                elif datos.get('tipo') == "deposito":
+                    transaccion = Transaccion()
+                    guardar_transaccion(transaccion, datos)
+                    caja = Caja()
+                    guardar_caja(caja, transaccion, usuario)
+                    cuenta.saldo = cuenta.saldo+transaccion.valor
+                    cuenta.save()
+                    return redirect(principal)
         context = {
             'f': formulario,
             'title': "Ingresar Cuenta",
@@ -233,3 +240,22 @@ def crearTransaccion (request):
         return render(request, 'transaccion/crear_transaccion.html', context)
     else:
         return render(request, 'login/acceso_prohibido.html')
+
+def saldo(saldo, valor):
+    if saldo >= valor:
+        return True
+    else:
+        return False
+
+def guardar_transaccion(transaccion, datos):
+    transaccion.tipo = datos.get('tipo')
+    transaccion.valor = datos.get('valor')
+    transaccion.descripcion = datos.get('descripcion')
+    transaccion.cuenta = datos.get('cuenta')
+    transaccion.save()
+
+def guardar_caja(caja, transaccion, usuario):
+    caja.nombres = usuario.first_name
+    caja.apellidos = usuario.last_name
+    caja.transaccion = transaccion
+    caja.save()
