@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
-from .forms import FormularioCliente, FormularioCuenta, FormularioTransaccion
+from .forms import FormularioCliente, FormularioCuenta, FormularioTransaccion, FormularioCuentaCedula
 from app.modelo.models import Cliente, Cuenta, Transaccion, Caja
 from django.contrib.auth.decorators import login_required
 
@@ -155,6 +155,34 @@ def crearCuenta (request):
     else:
         return render(request, 'login/acceso_prohibido.html')
 
+
+@login_required
+def crearCuentaCedula(request):
+    usuario = request.user
+    if usuario.has_perm('modelo.add_cuenta'):
+        formulario = FormularioCuentaCedula(request.POST)
+        if request.method == 'POST':
+            if formulario.is_valid():
+                datos = formulario.cleaned_data
+                dni = request.GET['cedula']
+                cliente = Cliente.objects.get(cedula = dni)
+                cuenta = Cuenta()
+                cuenta.numero = datos.get('numero')
+                cuenta.estado = True
+                cuenta.saldo = datos.get('saldo')
+                cuenta.tipoCuenta = datos.get('tipoCuenta')
+                cuenta.cliente = cliente
+                cuenta.save()
+                return redirect(principal)
+        context = {
+            'f': formulario,
+            'title': "Ingresar Cuenta",
+            'mensaje': "Ingresar nueva Cuenta"
+        }
+        return render(request, 'cliente/crear_cliente.html', context)
+    else:
+        return render(request, 'login/acceso_prohibido.html')
+
 @login_required
 def listarCuenta (request):
     usuario = request.user
@@ -202,6 +230,21 @@ def activarEstadoCuenta(request):
 
 
 # METODOS DE TRANSACCION
+@login_required
+def listarTransaccion(request):
+    usuario = request.user
+    if usuario.has_perm('modelo.view_transaccion'):
+        num = request.GET['numero']
+        cuent = Cuenta.objects.get(numero = num)
+        listaTransaccion = Transaccion.objects.all().filter(cuenta = cuent).order_by('fecha')
+        context = {
+            'transacciones':listaTransaccion,
+            'mensaje':"Cuenta de ",
+        }
+        return render(request, 'transaccion/home_transaccion.html', context)
+    else:
+        return render(request, 'login/acceso_prohibido.html')
+
 @login_required
 def crearTransaccion (request):
     usuario = request.user

@@ -22,6 +22,12 @@ class FormularioCuenta(forms.ModelForm):
         model = Cuenta
         fields = ["numero", "estado", "saldo", "tipoCuenta", "cliente"]
 
+# se crea una cuenta a traves de la cedula del cliente
+class FormularioCuentaCedula(forms.ModelForm):
+    class Meta:
+        model = Cuenta
+        fields = ["numero", "saldo", "tipoCuenta"]
+
 class FormularioTransaccion(forms.ModelForm):
     class Meta:
         model = Transaccion

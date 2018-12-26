@@ -10,8 +10,10 @@ urlpatterns = [
     path('eliminar', views.eliminar),
     path('buscarCliente', views.buscarCliente),
     path('crearCuenta', views.crearCuenta),
+    path('crearCuentaCedula', views.crearCuentaCedula),
     path('listarCuenta', views.listarCuenta),
     path('listarAllCuentas', views.principalCuenta, name='listAllCuenta'),
     path('activarCuenta', views.activarEstadoCuenta),
     path('crearTransaccion', views.crearTransaccion),
+    path('listarTransaccion', views.listarTransaccion),
 ]
