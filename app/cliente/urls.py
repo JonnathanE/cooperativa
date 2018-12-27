@@ -16,4 +16,5 @@ urlpatterns = [
     path('activarCuenta', views.activarEstadoCuenta),
     path('crearTransaccion', views.crearTransaccion),
     path('listarTransaccion', views.listarTransaccion),
+    path('detalleCliente',views.detalleCilente, name = 'pruebaModal'),
 ]

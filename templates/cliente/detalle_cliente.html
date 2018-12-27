@@ -1,0 +1,40 @@
+<div class="modal-dialog modal-lg">
+        <div class="modal-header">
+                <!--
+                <button type="button" class="close" onclick="return cerrar_modal()" data-dismiss="modal">x</button>
+                -->
+                <h5>Detalle de Cliente</h5>
+        </div>
+        <div class="modal-content">
+            <div class="row">
+              <div class="col s12">
+                <label class="blue-text text-darken-2"><b>CEDULA:</b></label>
+                <p>{{ cliente.cedula }}</p>
+                <label class="blue-text text-darken-2"><b>NOMBRES:</b></label>
+                <p>{{ cliente.nombres }}</p>
+                <label class="blue-text text-darken-2"><b>APELLIDOS:</b></label>
+                <p>{{ cliente.apellidos }}</p>
+                <label class="blue-text text-darken-2"><b>GENERO:</b></label>
+                <p>{{ cliente.genero }}</p>
+                <label class="blue-text text-darken-2"><b>ESTADO CIVIL:</b></label>
+                <p>{{ cliente.estadoCivil }}</p>
+                <label class="blue-text text-darken-2"><b>FECHA NACIMIENTO:</b></label>
+                <p>{{ cliente.fechaNacimiento }}</p>
+                <label class="blue-text text-darken-2"><b>CORREO:</b></label>
+                <p>{{ cliente.correo }}</p>
+                <label class="blue-text text-darken-2"><b>TELEFONO:</b></label>
+                <p>{{ cliente.telefono }}</p>
+                <label class="blue-text text-darken-2"><b>CELULAR:</b></label>
+                <p>{{ cliente.celular }}</p>
+                <label class="blue-text text-darken-2"><b>DIRECCION:</b></label>
+                <p>{{ cliente.direccion }}</p><br><br>
+              </div>
+           </div>
+        </div>
+        <div class="modal-footer">
+                <!--
+                <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+                -->
+                <button type="button" class="btn btn-default" onclick="return cerrar_modal()">Cerrar</button>
+        </div>
+</div>

@@ -266,8 +266,9 @@ def crearTransaccion (request):
                         cuenta.save()
                         return redirect(principal)
                     else:
-                        return HttpResponse('No se puede realizar el retiro')
-                elif datos.get('tipo') == "deposito":
+                        html = "<html><body>No se puede realizar el retiro.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                        return HttpResponse(html)
+                elif datos.get('tipo') == "deposito" OR datos.get('tipo') == "pensiones":
                     transaccion = Transaccion()
                     guardar_transaccion(transaccion, datos)
                     caja = Caja()
@@ -302,3 +303,19 @@ def guardar_caja(caja, transaccion, usuario):
     caja.apellidos = usuario.last_name
     caja.transaccion = transaccion
     caja.save()
+
+def detalleCilente(request):
+    usuario = request.user
+    if usuario.has_perm('modelo.view_cliente'):
+        dni = request.GET['cedula']
+        cliente = Cliente.objects.get(cedula=dni)
+        #formulario = FormularioCliente(instance=cliente)
+        context = {
+            'cliente': cliente,
+            'title': "Modificar Cliente",
+            'mensaje': "Modificar datos de " + cliente.nombres + " " + cliente.apellidos
+        }
+        return render(request, 'cliente/detalle_cliente.html', context)
+    else:
+        messages.warning(request, 'No Permitido')
+        return render(request, 'login/acceso_prohibido.html')

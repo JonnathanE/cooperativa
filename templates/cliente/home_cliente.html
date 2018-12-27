@@ -38,6 +38,7 @@
                             <td>Femenino</td>
                             {% endif %}
                             <td>
+                                <a onclick="return abrir_modal('detalleCliente?cedula={{item.cedula}}')">[Detalles]</a>
                                 <a href="editar?cedula={{item.cedula}}"><i class="material-icons left">edit</i></a>
                                 <a href="eliminar?cedula={{item.cedula}}"><i class="material-icons left">delete_sweep</i></a>
                                 <a href="listarCuenta?cedula={{item.cedula}}"><i class="material-icons left">ballot</i></a>
@@ -51,8 +52,30 @@
             <div class="card-action">
 
             </div>
+            <div id="popup" class="modal modal-fixed-footer white">
+
+            </div>
+
         </div>
     </div>
 </div>
-
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    function abrir_modal(url){
+        $('#popup').load(url, function(){
+                //console.log('JJJJJJJJJJJJJJEJEJEJEEEEEEEEEEEEEEEEEEEEFFFFFFFFF');
+                $(this).show();
+                $(this).css('top', '50px');
+                //$('.modal').modal();
+                //$('.modal').load("{% url 'pruebaModal'%}");
+        });
+        return false;
+}
+function cerrar_modal()
+{
+        $('#popup').hide();
+        return false;
+}
+</script>
 {% endblock %}
