@@ -29,7 +29,7 @@
                             <td>{{item.cliente}}</td>
                             <td>
                                 <a href="activarCuenta?numero={{item.numero}}">[Activar Cuenta]</a>
-                                <a href="listarTransaccion?numero={{item.numero}}">[Listar Transaccion]</a>
+                                <a onclick="return abrir_modal_transaccion('listarTransaccion?numero={{item.numero}}')" style="cursor: pointer">[Listar Transaccion]</a>
                                 <a href="listarCue?cedula={{item.numero}}">[Transaccion]</a>
                             </td>
                         </tr>
@@ -43,5 +43,16 @@
         </div>
     </div>
 </div>
-
+<div id="modalDetalleTransaccion" class="modal modal-fixed-footer white">
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    function abrir_modal_transaccion(url){
+        $('#modalDetalleTransaccion').load(url, function(){
+                $(this).modal('open');
+        });
+        return false;
+}
+</script>
 {% endblock %}

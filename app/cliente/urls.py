@@ -17,5 +17,4 @@ urlpatterns = [
     path('crearTransaccion', views.crearTransaccion),
     path('listarTransaccion', views.listarTransaccion),
     path('detalleCliente',views.detalleCilente, name = 'pruebaModal'),
-    path('detalleUser', views.detalleUser, name = 'detalleUs')
 ]

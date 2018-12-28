@@ -1,14 +1,16 @@
 {% extends "master.html" %}
 {% block contenido %}
 {% include "header.html" %}
-<div class="nav-wrapper container">
-    <form action="buscarCliente?cedula={{search.getText}}">
-        <div class="input-field">
-          <input id="search" type="search" required>
-          <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-          <i class="material-icons">close</i>
-        </div>
-    </form>
+<div class="row">
+    <div class="nav-wrapper container col s4 offset-s7 cyan lighten-5">
+        <form method = "get" action = "buscarCliente">
+            <div class="input-field">
+                <input id="search" type="search" name="cedula" class="white" placeholder="BUSCAR POR NUMERO DE CEDULA" required>
+                <label class="label-icon deep-orange white-text" for="search"><i class="material-icons">search</i></label>
+                <i class="material-icons">close</i>
+            </div>
+        </form>
+    </div>
 </div>
 <div class="row">
     <div class="col s12">
@@ -37,10 +39,11 @@
                             <td>Femenino</td>
                             {% endif %}
                             <td>
+                                <a onclick="return abrir_modal('detalleCliente?cedula={{item.cedula}}')" style="cursor: pointer">[Detalles]</a>
                                 <a href="editar?cedula={{item.cedula}}"><i class="material-icons left">edit</i></a>
                                 <a href="eliminar?cedula={{item.cedula}}"><i class="material-icons left">delete_sweep</i></a>
                                 <a href="listarCuenta?cedula={{item.cedula}}"><i class="material-icons left">ballot</i></a>
-                            </td>
+                                <a href="crearCuentaCedula?cedula={{item.cedula}}">[Crear cuenta]</a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -48,8 +51,29 @@
             <div class="card-action">
 
             </div>
+            <div id="popup" class="modal modal-fixed-footer white">
+
+            </div>
         </div>
     </div>
 </div>
 
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+    function abrir_modal(url){
+        $('#popup').load(url, function(){
+                //console.log('JJJJJJJJJJJJJJEJEJEJEEEEEEEEEEEEEEEEEEEEFFFFFFFFF');
+                //$(this).modal('open');
+                $(this).show();
+                $(this).css('top', '50px');
+        });
+        return false;
+}
+function cerrar_modal(){
+        $('#popup').hide();
+        //$(this).modal('hide');
+        return false;
+}
+</script>
 {% endblock %}

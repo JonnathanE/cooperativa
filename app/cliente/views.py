@@ -115,14 +115,21 @@ def buscarCliente(request):
     usuario = request.user
     if usuario.has_perm('modelo.view_cliente'):
         dni = request.GET['cedula']
-        #cliente = Cliente.objects.get(cedula=dni)
-        listaClientes = Cliente.objects.get(cedula=dni)
-        context = {
-            'item': listaClientes,
-            'title': "Clientes",
-            'mensaje': "Modulo Clientes"
-        }
-        return render(request, 'cliente/buscar_cliente.html', context)
+        auxC = Cliente.objects.filter(cedula=dni)
+        if auxC:
+            listaClientes = auxC.get(cedula=dni)
+            if listaClientes:
+                context = {
+                    'item': listaClientes,
+                    'title': "Clientes",
+                    'mensaje': "Modulo Clientes"
+                }
+                return render(request, 'cliente/buscar_cliente.html', context)
+            else:
+                return redirect(principal)
+        else:
+            return redirect(principal)
+
     else:
         return render(request, 'login/acceso_prohibido.html')
 
@@ -319,12 +326,3 @@ def detalleCilente(request):
     else:
         messages.warning(request, 'No Permitido')
         return render(request, 'login/acceso_prohibido.html')
-
-def detalleUser(request):
-    usuario = request.user
-    context = {
-        'cliente': usuario,
-        'title': "Modificar Cliente",
-        'mensaje': "Modificar datos de " + cliente.nombres + " " + cliente.apellidos
-    }
-    return render(request, 'detalle_usuario.html')
