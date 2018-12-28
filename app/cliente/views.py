@@ -256,7 +256,7 @@ def crearTransaccion (request):
                 #dni = request.GET['cedula']
                 #cliente = Cliente.objects.get(cedula = dni)
                 cuenta = datos.get('cuenta')
-                if datos.get('tipo') == "retiro":
+                if datos.get('tipo') == "retiro" or datos.get('tipo') == "online":
                     if saldo(cuenta.saldo,datos.get('valor')):
                         transaccion = Transaccion()
                         guardar_transaccion(transaccion, datos)
@@ -268,7 +268,7 @@ def crearTransaccion (request):
                     else:
                         html = "<html><body>No se puede realizar el retiro.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
                         return HttpResponse(html)
-                elif datos.get('tipo') == "deposito" OR datos.get('tipo') == "pensiones":
+                elif datos.get('tipo') == "deposito" or datos.get('tipo') == "pensiones" or datos.get('tipo') == "seguros" or datos.get('tipo') == "iess":
                     transaccion = Transaccion()
                     guardar_transaccion(transaccion, datos)
                     caja = Caja()
@@ -319,3 +319,12 @@ def detalleCilente(request):
     else:
         messages.warning(request, 'No Permitido')
         return render(request, 'login/acceso_prohibido.html')
+
+def detalleUser(request):
+    usuario = request.user
+    context = {
+        'cliente': usuario,
+        'title': "Modificar Cliente",
+        'mensaje': "Modificar datos de " + cliente.nombres + " " + cliente.apellidos
+    }
+    return render(request, 'detalle_usuario.html')
