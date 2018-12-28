@@ -133,6 +133,23 @@ def buscarCliente(request):
     else:
         return render(request, 'login/acceso_prohibido.html')
 
+def detalleCilente(request):
+    usuario = request.user
+    if usuario.has_perm('modelo.view_cliente'):
+        dni = request.GET['cedula']
+        cliente = Cliente.objects.get(cedula=dni)
+        #formulario = FormularioCliente(instance=cliente)
+        context = {
+            'cliente': cliente,
+            'title': "Modificar Cliente",
+            'mensaje': "Modificar datos de " + cliente.nombres + " " + cliente.apellidos
+        }
+        return render(request, 'cliente/detalle_cliente.html', context)
+    else:
+        messages.warning(request, 'No Permitido')
+        return render(request, 'login/acceso_prohibido.html')
+
+
 #METODOS DE LA CUENTA
 @login_required
 def crearCuenta (request):
@@ -234,7 +251,28 @@ def activarEstadoCuenta(request):
     else:
         return render(request, 'login/acceso_prohibido.html')
 
+@login_required
+def buscarCuenta(request):
+    usuario = request.user
+    if usuario.has_perm('modelo.view_cuenta'):
+        num = request.GET['numero']
+        auxC = Cuenta.objects.filter(numero=num)
+        if auxC:
+            listaCuenta = auxC.get(numero=num)
+            if listaCuenta:
+                context = {
+                    'item': listaCuenta,
+                    'title': "Clientes",
+                    'mensaje': "Modulo Clientes"
+                }
+                return render(request, 'cuenta/buscar_cuenta.html', context)
+            else:
+                return redirect(principal)
+        else:
+            return redirect(principal)
 
+    else:
+        return render(request, 'login/acceso_prohibido.html')
 
 # METODOS DE TRANSACCION
 @login_required
@@ -311,18 +349,4 @@ def guardar_caja(caja, transaccion, usuario):
     caja.transaccion = transaccion
     caja.save()
 
-def detalleCilente(request):
-    usuario = request.user
-    if usuario.has_perm('modelo.view_cliente'):
-        dni = request.GET['cedula']
-        cliente = Cliente.objects.get(cedula=dni)
-        #formulario = FormularioCliente(instance=cliente)
-        context = {
-            'cliente': cliente,
-            'title': "Modificar Cliente",
-            'mensaje': "Modificar datos de " + cliente.nombres + " " + cliente.apellidos
-        }
-        return render(request, 'cliente/detalle_cliente.html', context)
-    else:
-        messages.warning(request, 'No Permitido')
-        return render(request, 'login/acceso_prohibido.html')
+

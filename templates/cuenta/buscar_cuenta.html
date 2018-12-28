@@ -30,7 +30,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for item in cuentas %}
                         <tr>
                             <td>{{item.numero}}</td>
                             <td>{{item.estado}}</td>
@@ -44,7 +43,6 @@
                                 <a href="listarCue?cedula={{item.numero}}">[Transaccion]</a>
                             </td>
                         </tr>
-                        {% endfor %}
                     </tbody>
                 </table>
             </div>
