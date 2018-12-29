@@ -33,10 +33,16 @@ class FormularioTransaccion(forms.ModelForm):
         model = Transaccion
         fields = ["tipo", "valor", "descripcion", "cuenta"]
 
+#transferencia
+class FormularioTansferencia(forms.ModelForm):
+    class Meta:
+        model = Transaccion
+        fields = ["valor", "descripcion", "cuenta"]
+
 class FormularioBancaVirtual(forms.ModelForm):
     class Meta:
         model = BancaVirtual
-        fields = ["numeroCuentaDestino", "dniTitularCuentaDestino", "titularCuentaDestino", "transaccion"]
+        fields = ["numeroCuentaDestino", "dniTitularCuentaDestino", "titularCuentaDestino"]
 
 class FormularioCaja(forms.ModelForm):
     class Meta:

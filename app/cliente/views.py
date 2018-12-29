@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
-from .forms import FormularioCliente, FormularioCuenta, FormularioTransaccion, FormularioCuentaCedula
-from app.modelo.models import Cliente, Cuenta, Transaccion, Caja
+from .forms import FormularioCliente, FormularioCuenta, FormularioTransaccion, FormularioCuentaCedula, FormularioBancaVirtual, FormularioTansferencia
+from app.modelo.models import Cliente, Cuenta, Transaccion, Caja, BancaVirtual
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -321,10 +321,27 @@ def crearTransaccion (request):
                     cuenta.saldo = cuenta.saldo+transaccion.valor
                     cuenta.save()
                     return redirect(principal)
+                elif datos.get('tipo') == "transferencia":
+                    if saldo(cuenta.saldo , datos.get('valor')):
+                        transaccion = Transaccion()
+                        #guardar_transaccion(transaccion, datos)
+                        #return redirect('crearBancaVirtual')
+                        form = FormularioBancaVirtual(request.POST)
+                        context = {
+                            'f': form,
+                            't': transaccion,
+                            'title': "Ingresar Cuenta",
+                            'mensaje': "Ingresar nueva Cuenta"
+                        }
+                        return render(request, 'transaccion/crear_banca_virtual.html', context)
+                        return HttpResponse('hola')
+                    else:
+                        html = "<html><body>No se puede realizar la transferencia.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                        return HttpResponse(html)
         context = {
             'f': formulario,
             'title': "Ingresar Cuenta",
-            'mensaje': "Ingresar nueva Cuenta"
+            'mensaje': "Ingresar nueva Cuenta",
         }
         return render(request, 'transaccion/crear_transaccion.html', context)
     else:
@@ -350,3 +367,75 @@ def guardar_caja(caja, transaccion, usuario):
     caja.save()
 
 
+@login_required
+def crearBancaVirtual(request):
+    usuario = request.user
+    if usuario.has_perm('modelo.add_transaccion'):
+        transaccion = request.GET('object')
+        formulario = FormularioBancaVirtual(request.POST)
+        if request.method == 'POST':
+            return HttpResponse('logrado')
+        context = {
+            'f': formulario,
+            't': transaccion,
+            'title': "Ingresar Cuenta",
+            'mensaje': "Ingresar nueva Cuenta"
+        }
+        return render(request, 'transaccion/crear_banca_virtual.html', context)
+    else:
+        return render(request, 'login/acceso_prohibido.html')
+
+@login_required
+def crearTransferencia(request):
+    usuario = request.user
+    if usuario.has_perm('modelo.add_transaccion'):
+        formulario = FormularioTansferencia(request.POST)
+        form = FormularioBancaVirtual(request.POST)
+        if request.method == 'POST':
+            if formulario.is_valid() and form.is_valid():
+                datosA = formulario.cleaned_data
+                datosB = form.cleaned_data
+                aux = Cuenta.objects.filter(numero = datosB.get('numeroCuentaDestino'))
+                if aux:
+                    cuentaB = aux.get(numero = datosB.get('numeroCuentaDestino'))
+                    if cuentaB:
+                        cuenta = datosA.get('cuenta')
+                        if saldo(cuenta.saldo, datosA.get('valor')):
+                            #guradar transaccion
+                            transaccion = Transaccion()
+                            transaccion.tipo = 'transferencia'
+                            transaccion.valor = datosA.get('valor')
+                            transaccion.descripcion = datosA.get('descripcion')
+                            transaccion.cuenta = datosA.get('cuenta')
+                            transaccion.save()
+                            #guardar bancaVirtual
+                            banca = BancaVirtual()
+                            banca.numeroCuentaDestino = datosB.get('numeroCuentaDestino')
+                            banca.dniTitularCuentaDestino = datosB.get('dniTitularCuentaDestino')
+                            banca.titularCuentaDestino = datosB.get('titularCuentaDestino')
+                            banca.transaccion = transaccion
+                            banca.save()
+                            #realizamos la transferencia
+                            cuenta.saldo = cuenta.saldo - transaccion.valor
+                            cuentaB.saldo = cuentaB.saldo + transaccion.valor
+                            cuenta.save()
+                            cuentaB.save()
+                            return redirect(principal)
+                        else:
+                            html = "<html><body>No se puede realizar la transaccion.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                            return HttpResponse(html)
+                    else:
+                        html = "<html><body>No existe el numero de cuenta.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                        return HttpResponse(html)
+                else:
+                    html = "<html><body>No existe el numero de cuenta.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                    return HttpResponse(html)
+        context = {
+            'f': formulario,
+            'b': form,
+            'title': "Ingresar Cuenta",
+            'mensaje': "Ingresar nueva Cuenta"
+        }
+        return render(request, 'transaccion/crear_transferencia.html', context)
+    else:
+        return render(request, 'login/acceso_prohibido.html')

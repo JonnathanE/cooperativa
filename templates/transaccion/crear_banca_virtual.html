@@ -1,0 +1,27 @@
+{% extends "master.html" %}
+{% block contenido %}
+<div class="container">
+    <h4>{{mensaje}}</h4>
+    <br>
+    <form method="post" >
+    <!--
+        {% for field in f %}
+            <div>
+                {{field.label_tag}}<br>
+                {{field}}
+                
+            </div>
+        {% endfor %}
+    -->
+        {{f.numeroCuentaDestino}}
+        {{f.dniTitularCuentaDestino}}
+        {{f.titularCuentaDestino}}
+        {{f.transaccion..is_hidden}}<br><br><br><br>
+        {{t}}<br>
+        <!--{{f.as_p}}
+        <br>-->
+        {% csrf_token %}
+        <input type="submit" value="Registrar">
+    </form>
+</div>
+{% endblock %}

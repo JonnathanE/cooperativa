@@ -86,7 +86,7 @@ class Transaccion(models.Model):
         ('dividendos', 'Dividendos'),
         ('reembolsoGastos', 'Reembolso de Gastos'),
         ('pagoProveedores', 'Reembolso de Gastos'),
-        ('transferencia', 'Traslado de efectivo entre entidades bancarias'),
+        ('transaccion', 'Traslado de efectivo entre entidades bancarias'),
         ('seguros', 'Pago de Seguros'),
         ('iess', 'Pago del IESS'),
         ('hipotecas', 'Pago de Hipotecas'),
