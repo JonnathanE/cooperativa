@@ -26,7 +26,6 @@ def loginPage(request):
                 messages.warning(request, 'Usuario y/o contraseña incorrectos')
     else:
         formulario = FormularioLogin()
-
     context = {
         'f': formulario,
     }

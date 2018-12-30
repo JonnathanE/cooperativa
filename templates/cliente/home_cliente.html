@@ -40,9 +40,7 @@
                             {% endif %}
                             <td>
                                 <a onclick="return abrir_modal('detalleCliente?cedula={{item.cedula}}')" style="cursor: pointer">[Detalles]</a>
-                                {% if perms.polls.change_cliente%}
                                 <a href="editar?cedula={{item.cedula}}"><i class="material-icons left">edit</i></a>
-                                {% endif %}
                                 {% if perms.polls.delete_cliente%}
                                 <a href="eliminar?cedula={{item.cedula}}"><i class="material-icons left">delete_sweep</i></a>
                                 {% endif %}

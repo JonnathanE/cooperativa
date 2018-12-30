@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def principal(request):
     usuario = request.user
-    print(usuario.get_all_permissions())
+    #print(usuario.get_all_permissions())
     if usuario.has_perm('modelo.view_cliente'):
         listaClientes = Cliente.objects.all().order_by('apellidos')
         context = {
@@ -86,7 +86,7 @@ def modificar(request):
         }
         return render(request, 'cliente/crear_cliente.html', context)
     else:
-        messages.warning(request, 'No Permitido')
+        #messages.warning(request, 'No Permitido')
         return render(request, 'login/acceso_prohibido.html')
 
 
@@ -263,7 +263,7 @@ def buscarCuenta(request):
                 context = {
                     'item': listaCuenta,
                     'title': "Clientes",
-                    'mensaje': "Modulo Clientes"
+                    'mensaje': "Modulo Cuentas"
                 }
                 return render(request, 'cuenta/buscar_cuenta.html', context)
             else:
@@ -284,7 +284,7 @@ def listarTransaccion(request):
         listaTransaccion = Transaccion.objects.all().filter(cuenta = cuent).order_by('fecha')
         context = {
             'transacciones':listaTransaccion,
-            'mensaje':"Cuenta de ",
+            'mensaje':"Transacciones de " + cuent.cliente.nombres,
         }
         return render(request, 'transaccion/home_transaccion.html', context)
     else:
@@ -322,26 +322,12 @@ def crearTransaccion (request):
                     cuenta.save()
                     return redirect(principal)
                 elif datos.get('tipo') == "transferencia":
-                    if saldo(cuenta.saldo , datos.get('valor')):
-                        transaccion = Transaccion()
-                        #guardar_transaccion(transaccion, datos)
-                        #return redirect('crearBancaVirtual')
-                        form = FormularioBancaVirtual(request.POST)
-                        context = {
-                            'f': form,
-                            't': transaccion,
-                            'title': "Ingresar Cuenta",
-                            'mensaje': "Ingresar nueva Cuenta"
-                        }
-                        return render(request, 'transaccion/crear_banca_virtual.html', context)
-                        return HttpResponse('hola')
-                    else:
-                        html = "<html><body>No se puede realizar la transferencia.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
-                        return HttpResponse(html)
+                    html = "<html><body>No se puede realizar la transferencia.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                    return HttpResponse(html)
         context = {
             'f': formulario,
             'title': "Ingresar Cuenta",
-            'mensaje': "Ingresar nueva Cuenta",
+            'mensaje': "Ingresar nueva Transaccion",
         }
         return render(request, 'transaccion/crear_transaccion.html', context)
     else:
@@ -366,24 +352,6 @@ def guardar_caja(caja, transaccion, usuario):
     caja.transaccion = transaccion
     caja.save()
 
-
-@login_required
-def crearBancaVirtual(request):
-    usuario = request.user
-    if usuario.has_perm('modelo.add_transaccion'):
-        transaccion = request.GET('object')
-        formulario = FormularioBancaVirtual(request.POST)
-        if request.method == 'POST':
-            return HttpResponse('logrado')
-        context = {
-            'f': formulario,
-            't': transaccion,
-            'title': "Ingresar Cuenta",
-            'mensaje': "Ingresar nueva Cuenta"
-        }
-        return render(request, 'transaccion/crear_banca_virtual.html', context)
-    else:
-        return render(request, 'login/acceso_prohibido.html')
 
 @login_required
 def crearTransferencia(request):
@@ -434,7 +402,7 @@ def crearTransferencia(request):
             'f': formulario,
             'b': form,
             'title': "Ingresar Cuenta",
-            'mensaje': "Ingresar nueva Cuenta"
+            'mensaje': "Ingresar nueva Transferencia"
         }
         return render(request, 'transaccion/crear_transferencia.html', context)
     else:

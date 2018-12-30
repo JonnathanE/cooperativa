@@ -20,7 +20,7 @@
             <nav class="left">
                 <a href="#menu"><span>Menú</span></a>
             </nav>
-            <a href="" class="logo">Cooperativa Jonnathan</a>
+            <a href="" class="logo" style="color:#26a69a">Cooperativa Jonnathan</a>
             <nav class="right">
                 <a href="/login/" class="button alt">Login</a>
             </nav>
@@ -29,9 +29,11 @@
         <!-- Menu -->
         <nav id="menu">
             <ul class="links">
-                <li><a href="/home" id="home">Home</a></li>
+                <li><a href="{% url 'home_page'%}" id="home">Home</a></li>
+                <!--
                 <li><a href="#one">Beneficios</a></li>
                 <li><a href="#three">Elementos</a></li>
+                -->
             </ul>
             <ul class="actions vertical">
                 <li><a href="/login" class="button fit">Login</a></li>
@@ -41,15 +43,18 @@
         <!-- Banner -->
         <section id="banner">
             <div class="content">
-                <h1>Servicio de Facturación Electrónica</h1>
+                <h1>Servicio de Administracion de Cooperativa</h1>
+                <!--
                 <p>Simple de Integrar, fácil de Utilizar y con Estupenda Atención al Cliente.</p>
+                -->
                 <ul class="actions">
-                    <li><a href="/login" class="button scrolly">Registrarse</a></li>
+                    <li><a href="/login" class="button scrolly" style="background:#26a69a">Login</a></li>
                 </ul>
             </div>
         </section>
 
         <!-- One -->
+        <!--
         <section id="one" class="wrapper">
             <div class="inner flex flex-3">
                 <div class="flex-item left">
@@ -77,14 +82,16 @@
                 </div>
             </div>
         </section>
-
+        -->
         <!-- Two -->
-        <section id="two" class="wrapper style1 special">
+        <section id="two" class="wrapper style1 special" style="background:#26a69a">
             <div class="inner">
                 <h2>¿Qué es y Para qué Sirve?</h2>
                 <figure>
-                    <blockquote>
-                        Una factura electrónica, es un documento que sirve para describir el costo de los productos y desglosar los impuestos correspondientes a pagar. Sustituye, según las disposiciones legales correspondientes, a las facturas tradicionales en papel y garantiza, entre otras cosas, la autenticidad de su origen y la integridad de su contenido.
+                    <blockquote style="color:#fff">
+                        Es una aplicacion web en donde los diferentes empleados de la
+                        Cooperativa podran entrar para ejercer sus respectivas funciones
+                        como: administrar cuentas de los clientes, crear transacciones, etc.
                     </blockquote>
                     <!--
                     <footer>
@@ -97,7 +104,9 @@
         </section>
 
         <!-- Three -->
+        
         <section id="three" class="wrapper">
+        <!--
             <div class="inner flex flex-3">
                 <div class="flex-item box">
                     <div class="image fit">
@@ -134,15 +143,17 @@
                 </div>
                 
             </div>
+            -->
         </section>
+        
 
         <!-- Footer -->
         <footer id="footer">
             <div class="inner">
-                <h2>Contacto</h2>
+                <h2>Contacto Administracion Central</h2>
                 <ul class="actions">
-                    <li><span class="icon fa-phone"></span> <a href="#">(593) 969-404-785</a></li>
-                    <li><span class="icon fa-envelope"></span> <a href="#">facturacion-yjj@gmail.com</a></li>
+                    <li><span class="icon fa-phone"></span> <a href="#">(593) 111-222-333</a></li>
+                    <li><span class="icon fa-envelope"></span> <a href="#">cooperativaJE@gmail.com</a></li>
                     <li><span class="icon fa-map-marker"></span>Unl</li>
                 </ul>
             </div>
