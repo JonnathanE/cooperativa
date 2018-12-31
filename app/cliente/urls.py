@@ -22,4 +22,6 @@ urlpatterns = [
     path('listarTransaccion', views.listarTransaccion),
     path('detalleCliente',views.detalleCilente, name = 'pruebaModal'),
     path('crearTransferencia', views.crearTransferencia),
+    #crear pdf
+    path('report', views.reporte_pdf),
 ]

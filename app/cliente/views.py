@@ -5,6 +5,23 @@ from .forms import FormularioCliente, FormularioCuenta, FormularioTransaccion, F
 from app.modelo.models import Cliente, Cuenta, Transaccion, Caja, BancaVirtual
 from django.contrib.auth.decorators import login_required
 
+from io import BytesIO
+from reportlab.pdfgen import canvas
+#from reportlab.lib.pagesizes import A4, cm
+from django.http import FileResponse
+from reportlab.platypus.tables import Table, TableStyle
+from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib.units import inch
+from reportlab.lib.colors import pink, black, red, blue, green
+from reportlab.lib.units import cm
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Spacer, Paragraph
+from reportlab.pdfbase import pdfmetrics
+from reportlab.graphics.shapes import Drawing, Rect
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.lib.enums import TA_CENTER
+
 # Create your views here.
 @login_required
 def principal(request):
@@ -407,3 +424,111 @@ def crearTransferencia(request):
         return render(request, 'transaccion/crear_transferencia.html', context)
     else:
         return render(request, 'login/acceso_prohibido.html')
+
+
+# CREAR PDF
+
+def reporte_pdf(request):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    # Para descargar directo
+    #response['Content-Disposition'] = 'attachment; filename=reporte.pdf'
+ 
+    # Create the PDF object, using the response object as its "file."
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, A4)
+
+    # Instanciar Cuenta
+    num = request.GET['numero']
+    cuent = Cuenta.objects.get(numero = num)
+    listTransaccion = Transaccion.objects.all().filter(cuenta = cuent).order_by('fecha')
+
+    # HEADER
+    p.setLineWidth(.3)
+    p.setFont('Helvetica', 10)
+    p.drawString(180, 800, "COOPERATIVA DE AHORRO Y CREDITO")
+
+    p.setFont('Helvetica-Bold', 17)
+    p.drawString(160, 780, "COOPERATIVA JONNATHAN")
+
+    p.setFont('Helvetica', 15)
+    p.drawString(180, 762, "CUENTA TIPO: " + cuent.tipoCuenta)
+
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(30, 730, "Oficina:")
+
+    p.setFont('Helvetica', 12)
+    p.drawString(95, 730, "Loja")
+
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(325, 730, "N. de Cuenta: ")
+    p.setFont('Helvetica', 12)
+    p.drawString(425, 730, cuent.numero)
+    p.line(420, 727, 560, 727)#start X, height end y , height
+    
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(30, 710, "Nombres:")
+
+    p.setFont('Helvetica', 12)
+    p.drawString(95, 710, cuent.cliente.apellidos + ' ' + cuent.cliente.nombres)
+
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(30, 690, "Domicilio:")
+
+    p.setFont('Helvetica', 12)
+    p.drawString(95, 690, cuent.cliente.direccion)
+
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(348, 690, "Telefono:")
+    p.setFont('Helvetica', 12)
+    p.drawString(425, 690, cuent.cliente.telefono)
+
+    # Cliente table
+    transacciones = []
+    for ltr in listTransaccion:
+        transacciones.append({'fecha':ltr.fecha, 'name':ltr.tipo, 'b1':ltr.valor, 'b2':ltr.cuenta.saldo})
+    #transacciones = [{'fecha':'1','name':'Jonnathan', 'b1':'3.4', 'b2':'3.5'}]
+
+    # Table header
+    styles = getSampleStyleSheet()
+    styleBH = styles["Normal"]
+    styleBH.alignment = TA_CENTER
+    styleBH.fontSize = 10
+
+    fecha = Paragraph('''Fecha''', styleBH)
+    tipo = Paragraph('''Tipo Operacion''', styleBH)
+    monto = Paragraph('''Monto''', styleBH)
+    saldo = Paragraph('''Saldo''', styleBH)
+
+    data = []
+    data.append([fecha, tipo, monto, saldo])
+
+    # Table body
+    styleN = styles["BodyText"]
+    styleN.alignment = TA_CENTER
+    styleN.fontSize = 7
+
+    high = 640
+    for t in transacciones:
+        this_t = [t['fecha'], t['name'], t['b1'], t['b2']]
+        data.append(this_t)
+        high = high - 18
+    
+    # Table size
+    table = Table(data, colWidths=[6 * cm, 6.4 * cm, 3 * cm, 3 * cm])
+    table.setStyle(TableStyle([# estilos de la tabla
+        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+        ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+    ]))
+    # pdf size
+    width, height = A4
+    table.wrapOn(p, width, height)
+    table.drawOn(p, 30, high)
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()# save page
+    p.save() # save pdf
+    # get the value of BytesIO buffer and write response
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+    return response

@@ -42,7 +42,10 @@
                             <td>
                                 <a href="activarCuenta?numero={{item.numero}}">[Activar Cuenta]</a>
                                 <a onclick="return abrir_modal_transaccion('listarTransaccion?numero={{item.numero}}')" style="cursor: pointer">[Listar Transaccion]</a>
+                                <!--
                                 <a href="listarCue?cedula={{item.numero}}">[Transaccion]</a>
+                                -->
+                                <a href="report?numero={{item.numero}}"><i class="material-icons left">picture_as_pdf</i></a>
                             </td>
                         </tr>
                         {% endfor %}
