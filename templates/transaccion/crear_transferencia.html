@@ -35,7 +35,13 @@
             </div>
         </div>
         {% csrf_token %}
+        <!--
         <input type="submit" value="Registrar">
+        -->
+        <button class="btn waves-effect waves-light teal lighten-1" type="submit">Guardar
+            <i class="material-icons right">send</i>
+        </button>
+        <a href="{% url 'cliente'%}" class="waves-effect waves-light btn">Cancelar</a>
     </form>
 </div>
 {% endblock %}

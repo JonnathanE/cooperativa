@@ -121,3 +121,27 @@
     <p>si se cumplio {{user.groups}}</p>
 {% endif %}
 -->
+
+<!-- MENSAJE MODAL-->
+{% if messages %}
+<body language=JavaScript onLoad="activar_modal()">
+    <div id="mod_mensaje" class="modal white">
+        <div class="modal-content">
+            <h3 class="center">ATENCION!!</h3>
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>  
+        </div>
+        <div class="modal-footer">
+            <a class="modal-close waves-effect waves-green btn-flat">Aceptar</a>
+        </div>
+    </div>
+</body>  
+{% endif %}
+<script type="text/javascript">
+    function activar_modal(){
+        $('#mod_mensaje').modal('open');
+    }
+</script>

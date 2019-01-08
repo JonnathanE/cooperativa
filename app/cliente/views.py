@@ -62,7 +62,7 @@ def crear(request):
                 cliente.celular = datos.get('celular')
                 cliente.direccion = datos.get('direccion')
                 cliente.save()
-                messages.warning(request, 'Guardado Exitosamente')
+                messages.info(request, 'Guardado Exitosamente!!')
                 return redirect(principal)
         context = {
             'f': formulario,
@@ -94,7 +94,7 @@ def modificar(request):
             cliente.celular = request.POST['celular']
             cliente.direccion = request.POST['direccion']
             cliente.save()
-            messages.warning(request, 'Datos Modificados')
+            messages.warning(request, 'Datos Modificados!!')
             return redirect(principal)
         context = {
             'f': formulario,
@@ -120,7 +120,7 @@ def eliminar(request):
                 messages.warning(request, 'No se pudo Eliminar')
             return redirect(principal)
         else:
-            messages.warning(request, 'Perdido')
+            messages.warning(request, 'Eliminado exitosamente!!')
             return redirect(principal)
         return render(request, 'clientes/crear_cliente.html', context)
     else:
@@ -186,6 +186,7 @@ def crearCuenta (request):
                 cuenta.cliente = datos.get('cliente')
                 #cuenta.cliente = cliente
                 cuenta.save()
+                messages.info(request, 'Cuenta creada exitosamente!!')
                 return redirect(principal)
         context = {
             'f': formulario,
@@ -214,6 +215,7 @@ def crearCuentaCedula(request):
                 cuenta.tipoCuenta = datos.get('tipoCuenta')
                 cuenta.cliente = cliente
                 cuenta.save()
+                messages.warning(request, 'Cuenta creada exitosamente!!')
                 return redirect(principal)
         context = {
             'f': formulario,
@@ -326,6 +328,7 @@ def crearTransaccion (request):
                         guardar_caja(caja, transaccion, usuario)
                         cuenta.saldo = cuenta.saldo-transaccion.valor
                         cuenta.save()
+                        messages.warning(request, 'Transaccion de RETIRO exitosa!!')
                         return redirect(principal)
                     else:
                         html = "<html><body>No se puede realizar el retiro.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
@@ -337,6 +340,7 @@ def crearTransaccion (request):
                     guardar_caja(caja, transaccion, usuario)
                     cuenta.saldo = cuenta.saldo+transaccion.valor
                     cuenta.save()
+                    messages.warning(request, 'Transaccion de DEPOSITO exitoso!!')
                     return redirect(principal)
                 elif datos.get('tipo') == "transferencia":
                     html = "<html><body>No se puede realizar la transferencia.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
@@ -405,6 +409,7 @@ def crearTransferencia(request):
                             cuentaB.saldo = cuentaB.saldo + transaccion.valor
                             cuenta.save()
                             cuentaB.save()
+                            messages.warning(request, 'Transferencia exitosa!!')
                             return redirect(principal)
                         else:
                             html = "<html><body>No se puede realizar la transaccion.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"

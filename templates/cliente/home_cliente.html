@@ -1,6 +1,7 @@
 {% extends "master.html" %}
 {% block contenido %}
 {% include "header.html" %}
+<!-- BUSCADOR -->
 <div class="row">
     <div class="nav-wrapper container col s4 offset-s7 cyan lighten-5">
         <form method = "get" action = "buscarCliente">
@@ -12,6 +13,8 @@
         </form>
     </div>
 </div>
+
+<!--  TABLA -->
 <div class="row">
     <div class="col s12">
         <div class="card z-depth-3">
@@ -63,6 +66,7 @@
     </div>
 </div>
 {% endblock %}
+
 {% block js %}
 <script type="text/javascript">
     function abrir_modal(url){
@@ -73,11 +77,16 @@
                 $(this).css('top', '50px');
         });
         return false;
-}
-function cerrar_modal(){
-        $('#popup').hide();
-        //$(this).modal('hide');
-        return false;
-}
+    }
+    function cerrar_modal(){
+            $('#popup').hide();
+            //$(this).modal('hide');
+            return false;
+    }
+    function ver_toast(messages){
+        M.toast({html: messages});
+    }
+
+    
 </script>
 {% endblock %}

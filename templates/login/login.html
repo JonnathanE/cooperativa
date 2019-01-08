@@ -10,7 +10,14 @@
                 {{field}}
             </div>
         {% endfor %}
-        <input type="submit" value="Ingresar">
+        <!--
+        <input type="submit" value="Ingresar" class="waves-effect teal lighten-1">
+        -->
+        <button class="btn waves-effect waves-light teal lighten-1" type="submit">Ingresar
+            <i class="material-icons right">send</i>
+        </button>
+        <a href="{% url 'home_page'%}" class="waves-effect waves-light btn">Cancelar</a>
     </form>
+        
 </div>
 {% endblock contenido %}
