@@ -62,6 +62,7 @@ class Cuenta(models.Model):
     estado = models.BooleanField(null = False, default = True)
     fechaApertura = models.DateField(auto_now_add = True, null = False)
     saldo = models.DecimalField(max_digits=10, decimal_places=3, null = False)
+    saldoApertura = models.DecimalField(max_digits=10, decimal_places=3, null = False, default = 0.0)
     tipoCuenta = models.CharField(max_length=30, choices = listaTipo, null = False)
     cliente = models.ForeignKey(
         'Cliente',
@@ -101,6 +102,7 @@ class Transaccion(models.Model):
     fecha = models.DateTimeField(auto_now_add = True, null = False)
     tipo = models.CharField(max_length=30, choices = listaTipoC, null = False)
     valor = models.DecimalField(max_digits=10, decimal_places=3, null = False)
+    saldoFinal = models.DecimalField(max_digits=10, decimal_places=3, null = False, default = 0.0)
     descripcion = models.TextField(null = False)
     cuenta = models.ForeignKey(
         'Cuenta',
@@ -111,8 +113,8 @@ modelo donde se registra la informacion de una transferencia online
 """
 class BancaVirtual (models.Model):
     bancaVirtual_id = models.AutoField(primary_key=True)
-    numeroCuentaDestino = models.CharField(max_length=20, unique=True, null = False)
-    dniTitularCuentaDestino = models.CharField(unique=True, max_length=10, null = False)
+    numeroCuentaDestino = models.CharField(max_length=20, null = False)#Se borro el atributo unique
+    dniTitularCuentaDestino = models.CharField(max_length=10, null = False)#Se borro el atributo unique
     titularCuentaDestino = models.CharField(max_length=160, null = False)
     transaccion = models.ForeignKey(
         'Transaccion',

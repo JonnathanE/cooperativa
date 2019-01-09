@@ -182,6 +182,7 @@ def crearCuenta (request):
                 cuenta.numero = datos.get('numero')
                 cuenta.estado = True
                 cuenta.saldo = datos.get('saldo')
+                cuenta.saldoApertura = datos.get('saldo')
                 cuenta.tipoCuenta = datos.get('tipoCuenta')
                 cuenta.cliente = datos.get('cliente')
                 #cuenta.cliente = cliente
@@ -212,6 +213,7 @@ def crearCuentaCedula(request):
                 cuenta.numero = datos.get('numero')
                 cuenta.estado = True
                 cuenta.saldo = datos.get('saldo')
+                cuenta.saldoApertura = datos.get('saldo')
                 cuenta.tipoCuenta = datos.get('tipoCuenta')
                 cuenta.cliente = cliente
                 cuenta.save()
@@ -328,6 +330,8 @@ def crearTransaccion (request):
                         guardar_caja(caja, transaccion, usuario)
                         cuenta.saldo = cuenta.saldo-transaccion.valor
                         cuenta.save()
+                        transaccion.saldoFinal = cuenta.saldo
+                        transaccion.save()
                         messages.warning(request, 'Transaccion de RETIRO exitosa!!')
                         return redirect(principal)
                     else:
@@ -340,6 +344,8 @@ def crearTransaccion (request):
                     guardar_caja(caja, transaccion, usuario)
                     cuenta.saldo = cuenta.saldo+transaccion.valor
                     cuenta.save()
+                    transaccion.saldoFinal = cuenta.saldo
+                    transaccion.save()
                     messages.warning(request, 'Transaccion de DEPOSITO exitoso!!')
                     return redirect(principal)
                 elif datos.get('tipo') == "transferencia":
@@ -390,13 +396,20 @@ def crearTransferencia(request):
                     if cuentaB:
                         cuenta = datosA.get('cuenta')
                         if saldo(cuenta.saldo, datosA.get('valor')):
-                            #guradar transaccion
+                            #guradar transaccion A
                             transaccion = Transaccion()
                             transaccion.tipo = 'transferencia'
                             transaccion.valor = datosA.get('valor')
                             transaccion.descripcion = datosA.get('descripcion')
                             transaccion.cuenta = datosA.get('cuenta')
                             transaccion.save()
+                            #guradar transaccion B
+                            transaccionB = Transaccion()
+                            transaccionB.tipo = 'transferencia'
+                            transaccionB.valor = datosA.get('valor')
+                            transaccionB.descripcion = datosA.get('descripcion')
+                            transaccionB.cuenta = cuentaB
+                            transaccionB.save()
                             #guardar bancaVirtual
                             banca = BancaVirtual()
                             banca.numeroCuentaDestino = datosB.get('numeroCuentaDestino')
@@ -409,6 +422,11 @@ def crearTransferencia(request):
                             cuentaB.saldo = cuentaB.saldo + transaccion.valor
                             cuenta.save()
                             cuentaB.save()
+                            #se guarda el saldo final de la transaccion
+                            transaccion.saldoFinal = cuenta.saldo
+                            transaccion.save()
+                            transaccionB.saldoFinal = cuentaB.saldo
+                            transaccionB.save()
                             messages.warning(request, 'Transferencia exitosa!!')
                             return redirect(principal)
                         else:
@@ -420,6 +438,9 @@ def crearTransferencia(request):
                 else:
                     html = "<html><body>No existe el numero de cuenta.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
                     return HttpResponse(html)
+            else:
+                html = "<html><body>Mal formulario jjjjjde cuenta.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                return HttpResponse(html)
         context = {
             'f': formulario,
             'b': form,
@@ -446,6 +467,7 @@ def reporte_pdf(request):
     # Instanciar Cuenta
     num = request.GET['numero']
     cuent = Cuenta.objects.get(numero = num)
+    #Instanciar Lista de transacciones
     listTransaccion = Transaccion.objects.all().filter(cuenta = cuent).order_by('fecha')
 
     # HEADER
@@ -490,8 +512,9 @@ def reporte_pdf(request):
 
     # Cliente table
     transacciones = []
+    transacciones.append({'fecha':cuent.fechaApertura, 'name':"Apertura", 'b1':cuent.saldoApertura, 'b2':cuent.saldoApertura})
     for ltr in listTransaccion:
-        transacciones.append({'fecha':ltr.fecha, 'name':ltr.tipo, 'b1':ltr.valor, 'b2':ltr.cuenta.saldo})
+        transacciones.append({'fecha':ltr.fecha, 'name':ltr.tipo, 'b1':ltr.valor, 'b2':ltr.saldoFinal})
     #transacciones = [{'fecha':'1','name':'Jonnathan', 'b1':'3.4', 'b2':'3.5'}]
 
     # Table header

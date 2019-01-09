@@ -34,7 +34,7 @@ admin.site.register(Banco, AdminBanco)
 
 class AdminCuenta(admin.ModelAdmin):
 
-    list_display = ["numero", "estado", "fechaApertura", "saldo", "tipoCuenta", "cliente"]
+    list_display = ["numero", "estado", "fechaApertura", "saldo", "saldoApertura","tipoCuenta", "cliente"]
     list_editable = ["estado"]
     list_filter = ["fechaApertura", "estado", "tipoCuenta"]
     search_fields = ["numero", "cliente"]
@@ -46,7 +46,7 @@ admin.site.register(Cuenta, AdminCuenta)
 
 class AdminTransaccion(admin.ModelAdmin):
 
-    list_display = ["fecha", "tipo", "valor", "descripcion", "cuenta"]
+    list_display = ["fecha", "tipo", "valor", "saldoFinal","descripcion", "cuenta"]
     list_filter = ["tipo"]
     search_fields = ["cuenta", "descripcion"]
 
