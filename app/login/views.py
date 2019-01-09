@@ -18,7 +18,7 @@ def loginPage(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    messages.warning(request, 'logueado correcto')
+                    #messages.warning(request, 'logueado correcto')
                     return HttpResponseRedirect(reverse('cliente'))
                 else:
                     messages.warning(request, 'Usuario inactivo')
@@ -32,6 +32,6 @@ def loginPage(request):
     return render (request, 'login/login.html', context)
 
 def logoutPage(request):
-    messages.warning(request, 'Sesión Cerrada con Exito')
+    #messages.warning(request, 'Sesión Cerrada con Exito')
     logout(request)
     return HttpResponseRedirect(reverse('home_page'))

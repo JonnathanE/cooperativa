@@ -36,7 +36,7 @@ def principal(request):
         }
         return render(request, 'cliente/home_cliente.html', context)
     else:
-        messages.warning(request, 'No Permitido')
+        #messages.warning(request, 'No Permitido')
         return render(request, 'login/acceso_prohibido.html')
 
 def saludar(request):
