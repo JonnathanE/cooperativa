@@ -56,6 +56,8 @@
                             <td>
                                 {% if item.estado != True %}
                                 <a href="activarCuenta?numero={{item.numero}}">[Activar Cuenta]</a>
+                                {% else %}
+                                <a href="desactivarCuenta?numero={{item.numero}}">[Desactivar Cuenta]</a>
                                 {% endif %}
                                 <a onclick="return abrir_modal_transaccion('listarTransaccion?numero={{item.numero}}')" style="cursor: pointer">[Listar Transaccion]</a>
                                 <!--
@@ -77,6 +79,7 @@
 </div>
 <div id="modalDetalleTransaccion" class="modal modal-fixed-footer white">
 </div>
+
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
