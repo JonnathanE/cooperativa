@@ -1,6 +1,14 @@
 {% extends "master.html" %}
 {% block contenido %}
 {% include "header.html" %}
+<nav class="nav-extended">
+    <div class="nav-content">
+        <ul class="tabs tabs-transparent">
+            <li onclick="return redirec_allclientes()" class="tab"><a class="" href= "{% url 'cliente'%}">Listar Todos los Clientes</a></li>
+            <li onclick="return redirec_allcuentas()" class="tab"><a class="active" href= "{% url 'listAllCuenta'%}">Listar Todas las Cuentas</a></li>
+        </ul>
+    </div>
+</nav>
 <div class = "light-green lighten-5">
 <div class="row">
     <div class="nav-wrapper container col s4 offset-s7 cyan lighten-5">
@@ -77,6 +85,21 @@
                 $(this).modal('open');
         });
         return false;
+    }
+
+    function redirec_allclientes(){
+        //var element = document.getElementById("allCuentaNav");
+        //element.className += " active"
+        //$('.allClienteNav').removeClass('active');
+        //$('.allCuentaNav').addClass('active');
+        location.href = "/clientes/"
+    }
+    function redirec_allcuentas(){
+        //var element = document.getElementById("allClienteNav");
+        //element.className += " active"
+        //$('.allCuentaNav').removeClass('active');
+        //$('.allClienteNav').addClass('active');
+        location.href = "listarAllCuentas";
     }
 </script>
 {% endblock %}
