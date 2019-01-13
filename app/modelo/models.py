@@ -81,22 +81,6 @@ class Transaccion(models.Model):
         ('retiro', 'Retiro'),
         ('deposito', 'Depósito'),
         ('transferencia', 'Transferencia'),
-        ('prestamo', 'Pago de Prestamo'),
-        ('nomina', 'Pagos de Nómina'),
-        ('pensiones', 'Pagos de Pensiones'),
-        ('dividendos', 'Dividendos'),
-        ('reembolsoGastos', 'Reembolso de Gastos'),
-        ('pagoProveedores', 'Reembolso de Gastos'),
-        ('transaccion', 'Traslado de efectivo entre entidades bancarias'),
-        ('seguros', 'Pago de Seguros'),
-        ('iess', 'Pago del IESS'),
-        ('hipotecas', 'Pago de Hipotecas'),
-        ('serviciosBasico', 'Pago de Servicios Básicos'),
-        ('tvCable', 'Cuentas de televisión por cable'),
-        ('celular', 'Cuentas de celular'),
-        ('online', 'Compras por Internet'),
-        ('administracion', 'Servicio de Administración'),
-        ('futuros', 'Pagos Futuros'),
     )
     transaccion_id = models.AutoField(primary_key=True)
     fecha = models.DateTimeField(auto_now_add = True, null = False)
