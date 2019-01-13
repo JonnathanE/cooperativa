@@ -1,0 +1,33 @@
+{% extends "master.html" %}
+{% block contenido %}
+{% include "header.html" %}
+{% include "navbar.html" %}
+<div class="container">
+    <h3>Generar Cartola o Comprobante de Transferencia</h3>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col s4">
+            <form method="post" action="report?numero={{cuentaA.numero}}">{% csrf_token %}
+                <button class="btn waves-effect waves-light teal lighten-1" type="submit">Cartola
+                    <i class="material-icons right">send</i>
+                </button>
+            </form>
+        </div>
+        <div class="col s4">
+            <form method="post" action="comprovante?tipocuenta={{cuentaA.tipoCuenta}}&cuentanumero={{cuentaA.numero}}&apellidosA={{apellsA}}&nombresA={{nombresA}}&direccion={{direccionA}}&telefono={{telefonoA}}&fecha={{transaccionA.fecha}}&monto={{transaccionA.valor}}&numb={{cuentaB.numero}}&nomb={{nombresBB}}&apellb={{apellsBB}}">{% csrf_token %}
+                <button class="btn waves-effect waves-light teal lighten-1" type="submit">Comprobante
+                    <i class="material-icons right">send</i>
+                </button>
+            </form>
+        </div>
+        <div class="col s4">
+            <a href="{% url 'cliente'%}" class="waves-effect waves-light btn">Regresar</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block js %}
+
+{% endblock %}

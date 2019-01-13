@@ -348,7 +348,11 @@ def crearTransaccion (request):
                         transaccion.saldoFinal = cuenta.saldo
                         transaccion.save()
                         messages.warning(request, 'Transaccion de RETIRO exitosa!!')
-                        return redirect(principal)
+                        #return redirect(principal)
+                        dat={
+                            'cuentaA': cuenta,
+                        }
+                        return render(request, 'pdf/btn_cartola.html', dat)
                     else:
                         html = "<html><body>No se puede realizar el retiro.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
                         return HttpResponse(html)
@@ -362,7 +366,11 @@ def crearTransaccion (request):
                     transaccion.saldoFinal = cuenta.saldo
                     transaccion.save()
                     messages.warning(request, 'Transaccion de DEPOSITO exitoso!!')
-                    return redirect(principal)
+                    #return redirect(principal)
+                    dat={
+                        'cuentaA': cuenta,
+                    }
+                    return render(request, 'pdf/btn_cartola.html', dat)
                 elif datos.get('tipo') == "transferencia":
                     html = "<html><body>No se puede realizar la transferencia.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
                     return HttpResponse(html)
@@ -443,18 +451,30 @@ def crearTransferencia(request):
                             transaccionB.saldoFinal = cuentaB.saldo
                             transaccionB.save()
                             messages.warning(request, 'Transferencia exitosa!!')
-                            return redirect(principal)
+                            #return redirect(principal)
+                            dat={
+                                'cuentaA': cuenta,
+                                'cuentaB': cuentaB,
+                                'transaccionA': transaccion,
+                                'nombresA': cuenta.cliente.nombres,
+                                'apellsA': cuenta.cliente.apellidos,
+                                'direccionA': cuenta.cliente.direccion,
+                                'telefonoA': cuenta.cliente.telefono,
+                                'nombresBB': cuentaB.cliente.nombres,
+                                'apellsBB': cuentaB.cliente.apellidos,
+                            }
+                            return render(request, 'pdf/btn.html', dat)
                         else:
-                            html = "<html><body>No se puede realizar la transaccion.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                            html = "<html><body>No se puede realizar la transaccion debido a que no cuenta con el saldo suficiente.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
                             return HttpResponse(html)
                     else:
-                        html = "<html><body>No existe el numero de cuenta.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                        html = "<html><body>No existe el numero de cuenta del destinatario.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
                         return HttpResponse(html)
                 else:
                     html = "<html><body>No existe el numero de cuenta.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
                     return HttpResponse(html)
             else:
-                html = "<html><body>Mal formulario jjjjjde cuenta.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                html = "<html><body>Los datos estan mal ingresados.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
                 return HttpResponse(html)
         context = {
             'f': formulario,
@@ -559,6 +579,113 @@ def reporte_pdf(request):
     
     # Table size
     table = Table(data, colWidths=[6 * cm, 6.4 * cm, 3 * cm, 3 * cm])
+    table.setStyle(TableStyle([# estilos de la tabla
+        ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+        ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+    ]))
+    # pdf size
+    width, height = A4
+    table.wrapOn(p, width, height)
+    table.drawOn(p, 30, high)
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()# save page
+    p.save() # save pdf
+    # get the value of BytesIO buffer and write response
+    pdf = buffer.getvalue()
+    buffer.close()
+    response.write(pdf)
+    return response
+
+
+def transferencia_pdf(request):
+    # Create the HttpResponse object with the appropriate PDF headers.
+    response = HttpResponse(content_type='application/pdf')
+    # Para descargar directo
+    #response['Content-Disposition'] = 'attachment; filename=reporte.pdf'
+ 
+    # Create the PDF object, using the response object as its "file."
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, A4)
+
+    # Instanciar Cuenta
+    tipoCuenta = request.GET['tipocuenta']
+    cuentaNumero = request.GET['cuentanumero']
+    apellidos = request.GET['apellidosA']
+    nombres = request.GET['nombresA']
+    direccion = request.GET['direccion']
+    telefono = request.GET['telefono']
+
+    fechaTransaccion = request.GET['fecha']
+    montoAux = request.GET['monto']
+    numCuentaDestinatario = request.GET['numb']
+    nombresDestinatario = request.GET['nomb']
+    apellidosDestinatario = request.GET['apellb']
+    
+    # HEADER
+    p.setLineWidth(.3)
+    p.setFont('Helvetica', 10)
+    p.drawString(180, 800, "COOPERATIVA DE AHORRO Y CREDITO")
+
+    p.setFont('Helvetica-Bold', 17)
+    p.drawString(160, 780, "COOPERATIVA JONNATHAN")
+
+    p.setFont('Helvetica', 15)
+    p.drawString(180, 762, "CUENTA TIPO: " + tipoCuenta)
+
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(30, 730, "Oficina:")
+
+    p.setFont('Helvetica', 12)
+    p.drawString(95, 730, "Loja")
+
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(325, 730, "N. de Cuenta: ")
+    p.setFont('Helvetica', 12)
+    p.drawString(425, 730, cuentaNumero)
+    p.line(420, 727, 560, 727)#start X, height end y , height
+    
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(30, 710, "Nombres:")
+
+    p.setFont('Helvetica', 12)
+    p.drawString(95, 710, apellidos + ' ' + nombres)
+
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(30, 690, "Domicilio:")
+
+    p.setFont('Helvetica', 12)
+    p.drawString(95, 690, direccion)
+
+    p.setFont('Helvetica-Bold', 12)
+    p.drawString(348, 690, "Telefono:")
+    p.setFont('Helvetica', 12)
+    p.drawString(425, 690, telefono)
+
+    
+    # Table header
+    styles = getSampleStyleSheet()
+    styleBH = styles["Normal"]
+    styleBH.alignment = TA_CENTER
+    styleBH.fontSize = 10
+
+    fecha = Paragraph('''Fecha Emision''', styleBH)
+    cuentaDestino = Paragraph('''Numero de Cuenta''', styleBH)
+    destinatario = Paragraph('''Destinatario''', styleBH)
+    tipo = Paragraph('''Tipo Operacion''', styleBH)
+    monto = Paragraph('''Monto''', styleBH)
+
+    data = []
+    data.append([fecha, cuentaDestino, destinatario, tipo, monto])
+    data.append([fechaTransaccion, numCuentaDestinatario, nombresDestinatario + apellidosDestinatario, "transferencia",montoAux])
+    # Table body
+    styleN = styles["BodyText"]
+    styleN.alignment = TA_CENTER
+    styleN.fontSize = 7
+
+    high = 640
+    
+    # Table size
+    table = Table(data, colWidths=[4.6 * cm, 2.5 * cm, 7 * cm, 3 * cm, 2.3 * cm])
     table.setStyle(TableStyle([# estilos de la tabla
         ('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
         ('BOX', (0,0), (-1,-1), 0.25, colors.black),

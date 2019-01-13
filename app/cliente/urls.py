@@ -25,4 +25,5 @@ urlpatterns = [
     path('crearTransferencia', views.crearTransferencia),
     #crear pdf
     path('report', views.reporte_pdf),
+    path('comprovante', views.transferencia_pdf),
 ]
