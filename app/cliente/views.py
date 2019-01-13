@@ -268,7 +268,11 @@ def activarEstadoCuenta(request):
             cuenta.save()
             return redirect(principalCuenta)
         else:
-            return render(request, 'cuenta/activar_cuenta.html')
+            context={
+                'mensaje': "Desea Activar la Cuenta?",
+                'enviar': "Activar",
+            }
+            return render(request, 'cuenta/activar_cuenta.html', context)
     else:
         return render(request, 'login/acceso_prohibido.html')
 
@@ -283,7 +287,11 @@ def desactivarEstadoCuenta(request):
             cuenta.save()
             return redirect(principalCuenta)
         else:
-            return render(request, 'cuenta/activar_cuenta.html')
+            context={
+                'mensaje': "Desea Desactivar la Cuenta?",
+                'enviar': "Desactivar",
+            }
+            return render(request, 'cuenta/activar_cuenta.html', context)
     else:
         return render(request, 'login/acceso_prohibido.html')
 

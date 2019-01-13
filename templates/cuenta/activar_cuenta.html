@@ -1,10 +1,26 @@
 {% extends 'master.html' %}
 {% block contenido %}
-<form method="POST" class="mt-4 mb-4">
-    <div class="container">
-        {% csrf_token %}
-        <input type="submit" value="Activar" class="btn waves-effect waves-light">
-        <a href="{% url 'listAllCuenta' %}" class="btn waves-effect waves-light">Cancelar</a>
+{% include "header.html" %}
+{% include "navbar.html" %}
+<div class="container z-depth-1">
+    <div class="row">
+        <h3 class="center">{{mensaje}}</h3>
     </div>
-</form>
+    <div class="row">
+        <div class="col s6">
+            <form method="POST" class="mt-4 mb-4">
+                <div class="container">
+                    {% csrf_token %}
+                    <div class="col s6">
+                        <button class="btn waves-effect waves-light teal lighten-1" type="submit">{{enviar}}
+                    </div>
+                    <div class="col s6">
+                        <a href="{% url 'listAllCuenta' %}" class="btn waves-effect waves-light">Cancelar</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row"></div>
+</div>
 {% endblock contenido %}
