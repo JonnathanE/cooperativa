@@ -345,42 +345,46 @@ def crearTransaccion (request):
                 #dni = request.GET['cedula']
                 #cliente = Cliente.objects.get(cedula = dni)
                 cuenta = datos.get('cuenta')
-                if datos.get('tipo') == "retiro" or datos.get('tipo') == "online":
-                    if saldo(cuenta.saldo,datos.get('valor')):
+                if cuenta.estado == True:
+                    if datos.get('tipo') == "retiro" or datos.get('tipo') == "online":
+                        if saldo(cuenta.saldo,datos.get('valor')):
+                            transaccion = Transaccion()
+                            guardar_transaccion(transaccion, datos)
+                            caja = Caja()
+                            guardar_caja(caja, transaccion, usuario)
+                            cuenta.saldo = cuenta.saldo-transaccion.valor
+                            cuenta.save()
+                            transaccion.saldoFinal = cuenta.saldo
+                            transaccion.save()
+                            messages.warning(request, 'Transaccion de RETIRO exitosa!!')
+                            #return redirect(principal)
+                            dat={
+                                'cuentaA': cuenta,
+                            }
+                            return render(request, 'pdf/btn_cartola.html', dat)
+                        else:
+                            html = "<html><body>No se puede realizar el retiro.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                            return HttpResponse(html)
+                    elif datos.get('tipo') == "deposito" or datos.get('tipo') == "pensiones" or datos.get('tipo') == "seguros" or datos.get('tipo') == "iess":
                         transaccion = Transaccion()
                         guardar_transaccion(transaccion, datos)
                         caja = Caja()
                         guardar_caja(caja, transaccion, usuario)
-                        cuenta.saldo = cuenta.saldo-transaccion.valor
+                        cuenta.saldo = cuenta.saldo+transaccion.valor
                         cuenta.save()
                         transaccion.saldoFinal = cuenta.saldo
                         transaccion.save()
-                        messages.warning(request, 'Transaccion de RETIRO exitosa!!')
+                        messages.warning(request, 'Transaccion de DEPOSITO exitoso!!')
                         #return redirect(principal)
                         dat={
                             'cuentaA': cuenta,
                         }
                         return render(request, 'pdf/btn_cartola.html', dat)
-                    else:
-                        html = "<html><body>No se puede realizar el retiro.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                    elif datos.get('tipo') == "transferencia":
+                        html = "<html><body>No se puede realizar la transferencia.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
                         return HttpResponse(html)
-                elif datos.get('tipo') == "deposito" or datos.get('tipo') == "pensiones" or datos.get('tipo') == "seguros" or datos.get('tipo') == "iess":
-                    transaccion = Transaccion()
-                    guardar_transaccion(transaccion, datos)
-                    caja = Caja()
-                    guardar_caja(caja, transaccion, usuario)
-                    cuenta.saldo = cuenta.saldo+transaccion.valor
-                    cuenta.save()
-                    transaccion.saldoFinal = cuenta.saldo
-                    transaccion.save()
-                    messages.warning(request, 'Transaccion de DEPOSITO exitoso!!')
-                    #return redirect(principal)
-                    dat={
-                        'cuentaA': cuenta,
-                    }
-                    return render(request, 'pdf/btn_cartola.html', dat)
-                elif datos.get('tipo') == "transferencia":
-                    html = "<html><body>No se puede realizar la transferencia.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                else:
+                    html = "<html><body>No se puede realizar la transferencia Debido a que su CUenta esta Inactiva.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
                     return HttpResponse(html)
         context = {
             'f': formulario,
