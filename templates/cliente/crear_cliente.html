@@ -1,8 +1,9 @@
 {% extends "master.html" %}
 {% block contenido %}
 <div class="container">
-    <h4>{{mensaje}}</h4>
+    <h4 class="center">{{mensaje}}</h4>
     <br>
+    <div class="divider deep-purple" style="height:3px;"></div>
     <form method="post">
         {% for field in f %}
             <div>
