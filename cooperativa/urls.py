@@ -22,4 +22,5 @@ urlpatterns = [
     path('', views.homePage, name='home_page'),
     path('clientes/',include('app.cliente.urls')),
     path('login/', include('app.login.urls')),
+    path('sw/', include('app.service_web.urls')),
 ]

@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'app.modelo',
     'app.cliente',
     'app.login',
+    'rest_framework',
+    'app.service_web',
 ]
 
 MIDDLEWARE = [
