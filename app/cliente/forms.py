@@ -7,6 +7,7 @@ from app.modelo.models import BancaVirtual
 from app.modelo.models import Caja
 from app.modelo.models import CajeroAutomatico
 
+# se crea un nuevo cliente
 class FormularioCliente(forms.ModelForm):
     class Meta:
         model = Cliente
@@ -32,6 +33,12 @@ class FormularioTransaccion(forms.ModelForm):
     class Meta:
         model = Transaccion
         fields = ["tipo", "valor", "descripcion", "cuenta"]
+
+#crear transaccion a traves del numero de cuenta
+class FormularioTransaccionNumCuenta(forms.ModelForm):
+    class Meta:
+        model = Transaccion
+        fields = ["tipo", "valor", "descripcion"]
 
 #transferencia
 class FormularioTansferencia(forms.ModelForm):

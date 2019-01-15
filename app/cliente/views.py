@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
-from .forms import FormularioCliente, FormularioCuenta, FormularioTransaccion, FormularioCuentaCedula, FormularioBancaVirtual, FormularioTansferencia
+from .forms import FormularioCliente, FormularioCuenta, FormularioTransaccion, FormularioCuentaCedula, FormularioBancaVirtual, FormularioTansferencia, FormularioTransaccionNumCuenta
 from app.modelo.models import Cliente, Cuenta, Transaccion, Caja, BancaVirtual
 from django.contrib.auth.decorators import login_required
 
@@ -341,6 +341,65 @@ def listarTransaccion(request):
     else:
         return render(request, 'login/acceso_prohibido.html')
 
+
+@login_required
+def crearTransaccionNumeroCuenta (request):
+    usuario = request.user
+    if usuario.has_perm('modelo.add_transaccion'):
+        formulario = FormularioTransaccionNumCuenta(request.POST)
+        num = request.GET['numero']
+        if request.method == 'POST':
+            if formulario.is_valid():
+                datos = formulario.cleaned_data
+                cuenta = Cuenta.objects.get(numero=num)
+                if cuenta.estado == True:
+                    if datos.get('tipo') == 'retiro':
+                        if cuenta.saldo >= datos.get('valor'):
+                            transaccion = Transaccion()
+                            guardar_transaccion_num(transaccion, datos, cuenta)
+                            caja = Caja()
+                            guardar_caja(caja, transaccion, usuario)
+                            cuenta.saldo = cuenta.saldo-transaccion.valor
+                            cuenta.save()
+                            transaccion.saldoFinal = cuenta.saldo
+                            transaccion.save()
+                            messages.warning(request, 'Transaccion de RETIRO exitosa!!')
+                            dat={
+                                'cuentaA': cuenta,
+                            }
+                            return render(request, 'pdf/btn_cartola.html', dat)
+                        else:
+                            html = "<html><body>No se puede realizar el retiro.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                            return HttpResponse(html)
+                    elif datos.get('tipo')== 'deposito':
+                        transaccion = Transaccion()
+                        guardar_transaccion_num(transaccion, datos, cuenta)
+                        caja = Caja()
+                        guardar_caja(caja, transaccion, usuario)
+                        cuenta.saldo = cuenta.saldo+transaccion.valor
+                        cuenta.save()
+                        transaccion.saldoFinal = cuenta.saldo
+                        transaccion.save()
+                        messages.warning(request, 'Transaccion de DEPOSITO exitoso!!')
+                        dat={
+                            'cuentaA': cuenta,
+                        }
+                        return render(request, 'pdf/btn_cartola.html', dat)
+                    elif datos.get('tipo') == "transferencia":
+                        html = "<html><body>No se puede realizar la transferencia.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                        return HttpResponse(html)
+                else:
+                    html = "<html><body>No se puede realizar la transferencia Debido a que su CUenta esta Inactiva.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                    return HttpResponse(html)
+        context = {
+            'f': formulario,
+            'title': "Ingresar Cuenta",
+            'mensaje': "Ingresar nueva Transaccion",
+        }
+        return render(request, 'transaccion/crear_transaccion.html', context)
+    else:
+        return render(request, 'login/acceso_prohibido.html')
+
 @login_required
 def crearTransaccion (request):
     usuario = request.user
@@ -408,13 +467,21 @@ def saldo(saldo, valor):
     else:
         return False
 
+# guardar transaccion a traves del numero de cuenta
+def guardar_transaccion_num(transaccion, datos, cuenta):
+    transaccion.tipo = datos.get('tipo')
+    transaccion.valor = datos.get('valor')
+    transaccion.descripcion = datos.get('descripcion')
+    transaccion.cuenta = cuenta
+    transaccion.save()
+# guardar transaccion generalmente
 def guardar_transaccion(transaccion, datos):
     transaccion.tipo = datos.get('tipo')
     transaccion.valor = datos.get('valor')
     transaccion.descripcion = datos.get('descripcion')
     transaccion.cuenta = datos.get('cuenta')
     transaccion.save()
-
+# guardar caja generalmente
 def guardar_caja(caja, transaccion, usuario):
     caja.nombres = usuario.first_name
     caja.apellidos = usuario.last_name
