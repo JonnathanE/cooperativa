@@ -39,8 +39,13 @@ def principal(request):
         #messages.warning(request, 'No Permitido')
         return render(request, 'login/acceso_prohibido.html')
 
-def saludar(request):
-    return HttpResponse('Hola clase')
+def principalBuscador(request):
+    usuario = request.user
+    if usuario.has_perm('modelo.view_cliente'):
+        return render(request, 'principal_busqueda.html')
+    else:
+        #messages.warning(request, 'No Permitido')
+        return render(request, 'login/acceso_prohibido.html')
 
 @login_required
 def crear(request):
@@ -81,7 +86,6 @@ def modificar(request):
         dni = request.GET['cedula']
         cliente = Cliente.objects.get(cedula=dni)
         formulario = FormularioCliente(instance=cliente)
-
         if request.method == 'POST':
             cliente.cedula = request.POST['cedula']
             cliente.apellidos = request.POST['apellidos']
@@ -99,9 +103,10 @@ def modificar(request):
         context = {
             'f': formulario,
             'title': "Modificar Cliente",
-            'mensaje': "Modificar datos de " + cliente.nombres + " " + cliente.apellidos
+            'mensaje': "Modificar datos de " + cliente.nombres + " " + cliente.apellidos,
+            'dni': dni
         }
-        return render(request, 'cliente/crear_cliente.html', context)
+        return render(request, 'cliente/editar_cliente.html', context)
     else:
         #messages.warning(request, 'No Permitido')
         return render(request, 'login/acceso_prohibido.html')
@@ -143,9 +148,9 @@ def buscarCliente(request):
                 }
                 return render(request, 'cliente/buscar_cliente.html', context)
             else:
-                return redirect(principal)
+                return redirect(principalBuscador)
         else:
-            return redirect(principal)
+            return redirect(principalBuscador)
 
     else:
         return render(request, 'login/acceso_prohibido.html')
@@ -204,10 +209,11 @@ def crearCuentaCedula(request):
     usuario = request.user
     if usuario.has_perm('modelo.add_cuenta'):
         formulario = FormularioCuentaCedula(request.POST)
+        dni = request.GET['cedula']
         if request.method == 'POST':
             if formulario.is_valid():
                 datos = formulario.cleaned_data
-                dni = request.GET['cedula']
+                
                 cliente = Cliente.objects.get(cedula = dni)
                 cuenta = Cuenta()
                 cuenta.numero = datos.get('numero')
@@ -222,9 +228,10 @@ def crearCuentaCedula(request):
         context = {
             'f': formulario,
             'title': "Ingresar Cuenta",
-            'mensaje': "Ingresar nueva Cuenta"
+            'mensaje': "Ingresar nueva Cuenta",
+            'dni': dni
         }
-        return render(request, 'cliente/crear_cliente.html', context)
+        return render(request, 'cuenta/crear_cuenta.html', context)
     else:
         return render(request, 'login/acceso_prohibido.html')
 
@@ -311,9 +318,9 @@ def buscarCuenta(request):
                 }
                 return render(request, 'cuenta/buscar_cuenta.html', context)
             else:
-                return redirect(principal)
+                return redirect(principalBuscador)
         else:
-            return redirect(principal)
+            return redirect(principalBuscador)
 
     else:
         return render(request, 'login/acceso_prohibido.html')

@@ -9,6 +9,7 @@ class Cliente(models.Model):
     listaGenero = (
         ('f', 'Femenino'),
         ('m', 'Masculino'),
+        (None, 'Eliga una Opcion'),
     )
     listaEstadoCivil = (
         ('soltero', 'Solter@'),
@@ -16,6 +17,7 @@ class Cliente(models.Model):
         ('viudo', 'Viud@'),
         ('divorciado', 'Divorciad@'),
         ('unionLibre', 'Unión Libre'),
+        (None, 'Eliga una Opcion'),
     )
 
     cliente_id = models.AutoField(primary_key=True)
@@ -56,6 +58,7 @@ class Cuenta(models.Model):
         ('juvenil', 'Juvenil'),
         ('programado', 'Ahorro Programado'),
         ('euros', 'Ahorro en Euros'),
+        (None, 'Eliga una Opcion'),
     )
     cuenta_id = models.AutoField(primary_key=True)
     numero = models.CharField(max_length=20, unique=True, null = False)
@@ -81,6 +84,7 @@ class Transaccion(models.Model):
         ('retiro', 'Retiro'),
         ('deposito', 'Depósito'),
         ('transferencia', 'Transferencia'),
+        (None, 'Eliga una Opcion'),
     )
     transaccion_id = models.AutoField(primary_key=True)
     fecha = models.DateTimeField(auto_now_add = True, null = False)

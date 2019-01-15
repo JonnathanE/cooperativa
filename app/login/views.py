@@ -19,7 +19,8 @@ def loginPage(request):
                 if user.is_active:
                     login(request, user)
                     #messages.warning(request, 'logueado correcto')
-                    return HttpResponseRedirect(reverse('cliente'))
+                    #return HttpResponseRedirect(reverse('cliente'))
+                    return HttpResponseRedirect(reverse('principalBuscador'))
                 else:
                     messages.warning(request, 'Usuario inactivo')
             else:

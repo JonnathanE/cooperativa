@@ -4,6 +4,7 @@
 <nav class="nav-extended">
     <div class="nav-content">
         <ul class="tabs tabs-transparent">
+            <li onclick="return redirec_busquedas()" class="tab"><a class="" href= "{% url 'cliente'%}">Busquedas</a></li>
             <li onclick="return redirec_allclientes()" class="tab"><a class="active" href= "{% url 'cliente'%}">Listar Todos los Clientes</a></li>
             <li onclick="return redirec_allcuentas()" class="tab"><a class="" href= "{% url 'listAllCuenta'%}">Listar Todas las Cuentas</a></li>
         </ul>
@@ -108,6 +109,10 @@
         //$('.allCuentaNav').removeClass('active');
         //$('.allClienteNav').addClass('active');
         location.href = "listarAllCuentas";
+    }
+
+    function redirec_busquedas(){
+        location.href = "prinBusc";
     }
     
 </script>
