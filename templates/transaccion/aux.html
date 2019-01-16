@@ -1,0 +1,365 @@
+{% block data %}
+
+<h3><i class="fa fa-angle-right"></i> Transferencia</h3>
+<div class="row mt">
+    <div id="transferir" style="display: none">
+        <div class="col-lg-12 col-md-12 col-sm-12 ">
+            <button type="button" onclick=transferirDinero() class="btn btn-success btn-lg  col-lg-12 col-md-12 col-sm-12"
+                id="btn_Buscar_Deposito" data-toggle="modal" data-target="#exampleModalCenter">Transferir
+                Dinero</button>
+
+
+            <!-- /content-panel -->
+        </div>
+        <br />
+        <br />
+        <br />
+
+    </div>
+
+
+    <!--Inicio parte izquierda-->
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="showback">
+            <h4><i class="fa fa-angle-right"></i> Seleccione cliente origen</h4>
+            <p>
+                <input id='txt_num_origen' type="text" class="form-control" placeholder="Ingrese numero de cuenta">
+
+            </p>
+            <p>
+                <button type="button" class="btn btn-theme03" id="btn_Buscar_Deposito" onclick=buscarOrigen()>Buscar</button>
+            </p>
+            <p>
+                <div id="msgOrigen">
+
+                </div>
+
+                <div id="contenidoOrigen" style="display: none">
+                    <div class="row mt">
+                        <div class="col-lg-12">
+                            <div class="form-panel">
+                                <h4 class="mb"><i class="fa fa-angle-right"></i> Datos</h4>
+                                <form class="form-horizontal style-form" method="get">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-sm-2 control-label">Cedulas</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="cedulaOrigen" type="text" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-sm-2 control-label">Nombres</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="nombresOrigen" type="text" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-sm-2 control-label">Numero Cuenta</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="numeroOrigen" type="text" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-sm-2 control-label">Saldo</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="saldoOrigen" type="text" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-sm-2 control-label">Tipo Cuenta</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="tipoOrigen" type="text" disabled="">
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                        <!-- col-lg-12-->
+                    </div>
+                </div>
+
+
+            </p>
+
+
+            <!-- /showback -->
+
+
+        </div>
+
+    </div>
+
+    <!--Fin parte izquierda-->
+
+    <!--Inicio parte Derecha-->
+
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        <!--  BUTTONS SIZES -->
+        <div class="showback">
+            <h4><i class="fa fa-angle-right"></i> Seleccione cliente destino</h4>
+            <p>
+                <input id='txt_num_Destino' type="text" class="form-control" placeholder="Ingrese numero de cuenta">
+
+            </p>
+            <p>
+                <button type="button" class="btn btn-theme03" id="btn_Buscar_Destino" onclick=buscarDestino()>Buscar</button>
+            </p>
+            <p>
+                <div id="msgDestino">
+
+                </div>
+
+                <div id="contenidoDestino" style="display: none">
+                    <div class="row mt">
+                        <div class="col-lg-12">
+                            <div class="form-panel">
+                                <h4 class="mb"><i class="fa fa-angle-right"></i> Datos</h4>
+                                <form class="form-horizontal style-form" method="get">
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-sm-2 control-label">Cedulas</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="cedulaDestino" type="text" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-sm-2 control-label">Nombres</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="nombresDestino" type="text" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-sm-2 control-label">Numero Cuenta</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="numeroDestino" type="text" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-sm-2 control-label">Saldo</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="saldoDestino" type="text" disabled="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 col-sm-2 control-label">Tipo Cuenta</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="tipoDestino" type="text" disabled="">
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                        <!-- col-lg-12-->
+                    </div>
+                </div>
+            </p>
+        </div>
+
+    </div>
+
+    <!--MODAL-->
+    <!-- Button trigger modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">TRANSFERIR DINERO</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal style-form">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Valor</label>
+                            <div class="col-sm-10" id="div_valor">
+                                <input name="valor" step="0.001" id="id_valor" required="" type="number">
+                                <div id="mensaje_valor">
+                                        <!--<span class="help-block">We'll never share your email with anyone else.</span>-->
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="motoAcual">
+                            <label class="col-sm-2 col-sm-2 control-label">Saldo Actual</label>
+                            <div class="col-sm-10">
+
+                                <input type="text" class="form-control" id="id_montoActual" disabled>
+
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Descipcion</label>
+                            <div class="col-sm-10">
+                                <textarea name="descripcion" cols="40" rows="10" id="id_descripcion" required=""></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Responsable</label>
+                            <div class="col-sm-10">
+                                <input name="responsable" maxlength="160" id="id_responsable" value="{{user}}" type="text" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 col-sm-2 control-label">Confirme contraseña</label>
+                            <div class="col-sm-10" id="clave_confirmacion">
+                                <input class="form-control" id="id_password" type="password" placeholder="Igrese clave">
+                                <div id="mensaje_clave">
+                                    <!--<span class="help-block">We'll never share your email with anyone else.</span>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button typ="button" class="btn btn-primary " onclick=generarTransferencia() id='btn_realizarTransaccion'>Transferir</button>
+                </div>
+            </div>
+        </div>
+        <!--FIN MODAL-->
+
+
+        {% csrf_token %}
+    </div>
+
+    <script type="application/javascript">
+        function buscarOrigen() {
+            var num = $('#txt_num_origen').val()
+            var div = $('#contenidoOrigen')
+            var tr = $('#transferir')
+            $.ajax({
+                type: "GET",
+                url: "{%url 'buscarTransferenciaOrigen' %}",
+                data: "numero=" + num,
+                success: function (data) {
+                    if (data) {
+                        arreglo = data.split(";")
+                        $('#msgOrigen').html('<div class="alert alert-success"><b>Cuenta Encontrada!</b> selecione en la parte derecha el cliente al que se transferira el dinero.</div>')
+                        div.show()
+                        $('#cedulaOrigen').val(arreglo[0])
+                        $('#nombresOrigen').val(arreglo[1] + " " + arreglo[2])
+                        $('#numeroOrigen').val(arreglo[4])
+                        $('#saldoOrigen').val(arreglo[5])
+                        $('#tipoOrigen').val(arreglo[6])
+                        $('#id_montoActual').val(arreglo[5])
+                    } else {
+                        $('#msgOrigen').html('<div class="alert alert-danger"><b>Cuenta no encontrada!</b> verifique el numero de cuenta</div>')
+                        div.hide()
+                        $('#cedulaOrigen').val('')
+                        $('#nombresOrigen').val('')
+                        $('#numeroOrigen').val('')
+                        $('#saldoOrigen').val('')
+                        $('#tipoOrigen').val('')
+                        tr.hide()
+                    }
+                }
+            });
+        }
+        function buscarDestino() {
+            var num = $('#txt_num_Destino').val()
+            var div = $('#contenidoDestino')
+            var tr = $('#transferir')
+            $.ajax({
+                type: "GET",
+                url: "{%url 'buscarTransferenciaOrigen' %}",
+                data: "numero=" + num,
+                success: function (data) {
+                    if (data) {
+                        arreglo = data.split(";")
+                        $('#msgDestino').html('<div class="alert alert-success"><b>Cuenta Encontrada!</b> precione el boton transferir dinero para iniciar transferencia.</div>')
+                        div.show()
+                        $('#cedulaDestino').val(arreglo[0])
+                        $('#nombresDestino').val(arreglo[1] + " " + arreglo[2])
+                        $('#numeroDestino').val(arreglo[4])
+                        $('#saldoDestino').val(arreglo[5])
+                        $('#tipoDestino').val(arreglo[6])
+                        tr.show()
+                    } else {
+                        $('#msgDestino').html('<div class="alert alert-danger"><b>Cuenta no encontrada!</b> verifique el numero de cuenta</div>')
+                        div.hide()
+                        $('#cedulaDestino').val('')
+                        $('#nombresDestino').val('')
+                        $('#numeroDestino').val('')
+                        $('#saldoDestino').val('')
+                        $('#tipoDestino').val('')
+                        tr.hide()
+                    }
+                }
+            });
+        }
+        function transferirDinero() {
+            var descripcion = $('#id_descripcion')
+            var numero1 = $('#numeroOrigen').val()
+            var numero2 = $('#numeroDestino').val()
+            descripcion.val("Numero cuenta origen: " + numero1 + "   Numero cuenta destino: " + numero2)
+        }
+        function generarTransferencia() {
+            var valor = $('#id_valor').val()
+            var descripcion = $('#id_descripcion').val()
+            var responsable = $('#id_responsable').val()
+            var cedula1 = $('#cedulaOrigen').val()
+            var numero1 = $('#numeroOrigen').val()
+            var cedula2 = $('#cedulaDestino').val()
+            var numero2 = $('#numeroDestino').val()
+            window.location.href = '{%url "transferencia"%}' + '?numero1=' + numero1 + '&&cedula1=' + cedula1 + '&&numero2=' + numero2 + '&&cedula2=' + cedula2 + '&&valor=' + valor + '&&descripcion=' + descripcion + '&&responsable=' + responsable
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+        var confirmacionValor=false 
+        var confirmacionPassword= false
+        $('#id_password').change(function () {
+            $.ajax({
+                url: "{%url 'confirmarContra' %}" + '?contra=' + $('#id_password').val(),
+                success: function (user) {
+                    if (user == 'True') {
+                        $('#mensaje_clave').html('<span class="help-block">Clave ingresada con éxito.</span>')
+                        
+                        $('#clave_confirmacion').removeClass('has-error')
+                        $('#clave_confirmacion').addClass('has-success')
+                        if(confirmacionValor){
+                            $('#btn_realizarTransaccion').removeAttr('disabled', "")
+                        }
+                        confirmacionPassword = true
+                    } else {
+                        $('#clave_confirmacion').removeClass('has-success')
+                        $('#clave_confirmacion').addClass('has-error')
+                        $('#btn_realizarTransaccion').attr('disabled', 'disabled')
+                        $('#mensaje_clave').html('<span class="help-block">Clave erronea.</span>')
+                        confirmacionPassword = false
+                    }
+                }
+            })
+        })
+        //comprobamos si el valor no es mayor a su saldo actual
+        $('#id_valor').change(function () {
+            var saldoActual = $('#id_montoActual').val()
+            var valor = $('#id_valor').val()
+            var valor = $('#id_valor').val()
+            if (parseFloat(valor) > parseFloat(saldoActual)) {
+                $('#mensaje_valor').html('<span class="help-block">  Asegures de que el valor sea menor al saldo actual</span>')
+                $('#btn_realizarTransaccion').attr('disabled', 'disabled')
+                $('#div_valor').removeClass('has-success')
+                $('#div_valor').addClass('has-error')
+                confirmacionValor = false
+            } else {
+                $('#mensaje_valor').html("")
+                $('#btn_realizarTransaccion').removeAttr('disabled', "")
+                $('#clave_confirmacion').removeClass('has-error')
+                $('#clave_confirmacion').addClass('has-success')
+                
+                if(confirmacionPassword){
+                    $('#btn_realizarTransaccion').removeAttr('disabled', "")
+                }
+                confirmacionValor = true
+            }
+        });
+    </script>
+
+    {%endblock%}

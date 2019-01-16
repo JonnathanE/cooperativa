@@ -46,6 +46,21 @@ class FormularioTansferencia(forms.ModelForm):
         model = Transaccion
         fields = ["valor", "descripcion", "cuenta"]
 
+# crear transferencia a traves del numero de cuenta
+class FormularioTansferenciaNumCuenta(forms.ModelForm):
+    class Meta:
+        model = Transaccion
+        fields = ["valor", "descripcion"]
+
+        
+
+# crear banca Virtual a traves del numero de cuenta
+class FormularioBancaVirtualNumCuenta(forms.ModelForm):
+    class Meta:
+        model = BancaVirtual
+        fields = ["numeroCuentaDestino"]
+
+
 class FormularioBancaVirtual(forms.ModelForm):
     class Meta:
         model = BancaVirtual

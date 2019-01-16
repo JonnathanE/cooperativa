@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
-from .forms import FormularioCliente, FormularioCuenta, FormularioTransaccion, FormularioCuentaCedula, FormularioBancaVirtual, FormularioTansferencia, FormularioTransaccionNumCuenta
+from .forms import FormularioCliente, FormularioCuenta, FormularioTransaccion, FormularioCuentaCedula, FormularioBancaVirtual, FormularioTansferencia, FormularioTransaccionNumCuenta, FormularioTansferenciaNumCuenta, FormularioBancaVirtualNumCuenta
 from app.modelo.models import Cliente, Cuenta, Transaccion, Caja, BancaVirtual
 from django.contrib.auth.decorators import login_required
 
@@ -325,6 +325,83 @@ def buscarCuenta(request):
     else:
         return render(request, 'login/acceso_prohibido.html')
 
+def buscarCuentaAjax(request):
+    confirmar = False
+    numero = request.GET['numero']
+    #auxC = Cuenta.objects.filter(numero=num)
+    #listaCuenta = auxC.get(numero=num)
+    lista= Cliente.objects.all().filter(cuenta__numero=numero).values('cedula','nombres','apellidos','correo','cuenta__numero','cuenta__saldo','cuenta__tipoCuenta').order_by('apellidos')
+    listaCuenta= Cuenta.objects.all().filter(numero=numero).values('numero','saldo','tipoCuenta')
+    #data = listaCuenta.numero+";"+listaCuenta.saldo+";"
+    data = ''
+    for i in lista.values():
+        data =i['cedula']+";"+i['nombres']+";"+i['apellidos']+";"+i['correo']+";"
+        
+    for i in listaCuenta.values():
+        data += i['numero']+";"+str(i['saldo'])+";"+i['tipoCuenta']
+
+    return HttpResponse(data)
+            
+
+def crearTransaccionAjax(request):
+    usuario = request.user
+    if usuario.has_perm('modelo.add_transaccion'):
+        formulario = FormularioTransaccionNumCuenta(request.POST)
+        if request.method == 'POST':
+            if formulario.is_valid():
+                num = request.POST['numero']
+                datos = formulario.cleaned_data
+                cuenta = Cuenta.objects.get(numero=num)
+                if cuenta.estado == True:
+                    if datos.get('tipo') == 'retiro':
+                        if cuenta.saldo >= datos.get('valor'):
+                            transaccion = Transaccion()
+                            guardar_transaccion_num(transaccion, datos, cuenta)
+                            caja = Caja()
+                            guardar_caja(caja, transaccion, usuario)
+                            cuenta.saldo = cuenta.saldo-transaccion.valor
+                            cuenta.save()
+                            transaccion.saldoFinal = cuenta.saldo
+                            transaccion.save()
+                            messages.warning(request, 'Transaccion de RETIRO exitosa!!')
+                            dat={
+                                'cuentaA': cuenta,
+                            }
+                            return render(request, 'pdf/btn_cartola.html', dat)
+                        else:
+                            html = "<html><body>No se puede realizar el retiro.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                            return HttpResponse(html)
+                    elif datos.get('tipo')== 'deposito':
+                        transaccion = Transaccion()
+                        guardar_transaccion_num(transaccion, datos, cuenta)
+                        caja = Caja()
+                        guardar_caja(caja, transaccion, usuario)
+                        cuenta.saldo = cuenta.saldo+transaccion.valor
+                        cuenta.save()
+                        transaccion.saldoFinal = cuenta.saldo
+                        transaccion.save()
+                        messages.warning(request, 'Transaccion de DEPOSITO exitoso!!')
+                        dat={
+                            'cuentaA': cuenta,
+                        }
+                        return render(request, 'pdf/btn_cartola.html', dat)
+                    elif datos.get('tipo') == "transferencia":
+                        html = "<html><body>No se puede realizar la transferencia.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                        return HttpResponse(html)
+                else:
+                    html = "<html><body>No se puede realizar la transferencia Debido a que su CUenta esta Inactiva.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                    return HttpResponse(html)
+        context = {
+            'f': formulario,
+            'title': "Ingresar Cuenta",
+            'mensaje': "Ingresar nueva Transaccion",
+        }
+        #return render(request, 'transaccion/crear_transaccion.html', context)
+        return render(request, 'transaccion/crear_transaccion_general.html', context)
+    else:
+        return render(request, 'login/acceso_prohibido.html')
+
+
 # METODOS DE TRANSACCION
 @login_required
 def listarTransaccion(request):
@@ -399,6 +476,102 @@ def crearTransaccionNumeroCuenta (request):
         return render(request, 'transaccion/crear_transaccion.html', context)
     else:
         return render(request, 'login/acceso_prohibido.html')
+
+
+@login_required
+def crearTransferenciaNumeroCuenta(request):
+    usuario = request.user
+    if usuario.has_perm('modelo.add_transaccion'):
+        formulario = FormularioTansferenciaNumCuenta(request.POST)
+        form = FormularioBancaVirtualNumCuenta(request.POST)
+        num = request.GET['numero']
+        if request.method == 'POST':
+            if formulario.is_valid() and form.is_valid():
+                datosA = formulario.cleaned_data
+                datosB = form.cleaned_data
+                auxCuentaB = Cuenta.objects.filter(numero = datosB.get('numeroCuentaDestino'))
+                if auxCuentaB:
+                    cuentaB = auxCuentaB.get(numero = datosB.get('numeroCuentaDestino'))
+                    if cuentaB:
+                        if cuentaB.estado == True:
+                            cuenta = Cuenta.objects.get(numero=num)
+                            if cuenta.estado == True:
+                                if cuenta.saldo >= datosA.get('valor'):
+                                    #guradar transaccion A
+                                    transaccion = Transaccion()
+                                    transaccion.tipo = 'transferencia'
+                                    transaccion.valor = datosA.get('valor')
+                                    transaccion.descripcion = datosA.get('descripcion')
+                                    transaccion.cuenta = cuenta
+                                    transaccion.save()
+                                    #guradar transaccion B
+                                    transaccionB = Transaccion()
+                                    transaccionB.tipo = 'transferencia'
+                                    transaccionB.valor = datosA.get('valor')
+                                    transaccionB.descripcion = datosA.get('descripcion')
+                                    transaccionB.cuenta = cuentaB
+                                    transaccionB.save()
+                                    #guardar bancaVirtual
+                                    banca = BancaVirtual()
+                                    banca.numeroCuentaDestino = datosB.get('numeroCuentaDestino')
+                                    banca.dniTitularCuentaDestino = cuentaB.cliente.cedula
+                                    banca.titularCuentaDestino = cuentaB.cliente.nombres
+                                    banca.transaccion = transaccion
+                                    banca.save()
+                                    #realizamos la transferencia
+                                    cuenta.saldo = cuenta.saldo - transaccion.valor
+                                    cuenta.save()
+                                    cuentaB.saldo = cuentaB.saldo + transaccion.valor
+                                    cuentaB.save()
+                                    #se guarda el saldo final de la transaccion
+                                    transaccion.saldoFinal = cuenta.saldo
+                                    transaccion.save()
+                                    transaccionB.saldoFinal = cuentaB.saldo
+                                    transaccionB.save()
+                                    messages.warning(request, 'Transferencia exitosa!!')
+                                    #return redirect(principal)
+                                    dat={
+                                        'cuentaA': cuenta,
+                                        'cuentaB': cuentaB,
+                                        'transaccionA': transaccion,
+                                        'nombresA': cuenta.cliente.nombres,
+                                        'apellsA': cuenta.cliente.apellidos,
+                                        'direccionA': cuenta.cliente.direccion,
+                                        'telefonoA': cuenta.cliente.telefono,
+                                        'nombresBB': cuentaB.cliente.nombres,
+                                        'apellsBB': cuentaB.cliente.apellidos,
+                                    }
+                                    return render(request, 'pdf/btn.html', dat)
+                                else:
+                                    html = "<html><body>No se puede realizar la transaccion debido a que no cuenta con el saldo suficiente.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                                    return HttpResponse(html)
+                            else:
+                                html = "<html><body>No se puede realizar la transaccion debido a que la cuenta origen ESTA INACTIVA.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                                return HttpResponse(html)
+                        else:
+                            html = "<html><body>No se puede realizar la transaccion debido a que la cuenta destino ESTA INACTIVA.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                            return HttpResponse(html)
+                    else:
+                        html = "<html><body>No existe el numero de cuenta del destinatario.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                        return HttpResponse(html)
+                else:
+                    html = "<html><body>No existe el numero de cuenta del destinatario.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                    return HttpResponse(html)
+            else:
+                html = "<html><body>Los datos estan mal ingresados.<br><a href= "''">Volver</a> | <a href= "'listarAllCuentas'">Principal</a></body></html>"
+                return HttpResponse(html)
+        context = {
+            'f': formulario,
+            'b': form,
+            'title': "Ingresar Cuenta",
+            'mensaje': "Ingresar nueva Transferencia",
+            'num': num
+        }
+        return render(request, 'transaccion/crear_transferencia.html', context)
+    else:
+        return render(request, 'login/acceso_prohibido.html')
+
+
 
 @login_required
 def crearTransaccion (request):

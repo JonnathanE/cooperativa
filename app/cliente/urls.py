@@ -23,8 +23,12 @@ urlpatterns = [
     path('crearTransaccion', views.crearTransaccion),
     path('listarTransaccion', views.listarTransaccion),
     path('detalleCliente',views.detalleCilente, name = 'pruebaModal'),
+    path('crearTransferenciaNumCuenta', views.crearTransferenciaNumeroCuenta),
     path('crearTransferencia', views.crearTransferencia),
     #crear pdf
     path('report', views.reporte_pdf),
     path('comprovante', views.transferencia_pdf),
+    #otro
+    path('buscarAjax', views.buscarCuentaAjax, name="buscarTransferenciaOrigen"),
+    path('crearTransaccionAjax', views.crearTransaccionAjax),
 ]
