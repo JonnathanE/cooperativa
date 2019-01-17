@@ -472,6 +472,7 @@ def crearTransaccionNumeroCuenta (request):
             'f': formulario,
             'title': "Ingresar Cuenta",
             'mensaje': "Ingresar nueva Transaccion",
+            'num': num
         }
         return render(request, 'transaccion/crear_transaccion.html', context)
     else:
@@ -572,7 +573,7 @@ def crearTransferenciaNumeroCuenta(request):
         return render(request, 'login/acceso_prohibido.html')
 
 
-
+# METODO INUTIL
 @login_required
 def crearTransaccion (request):
     usuario = request.user
@@ -661,7 +662,7 @@ def guardar_caja(caja, transaccion, usuario):
     caja.transaccion = transaccion
     caja.save()
 
-
+#METODO INUTIL
 @login_required
 def crearTransferencia(request):
     usuario = request.user
